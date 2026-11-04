@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalizar tu Regalo | Portalovers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <header class="header scrolled personalize-header-bar">
+    <div class="container header-container">
+      <a href="index.html" class="logo">Portalovers</a>
+      <nav class="nav-menu" id="primaryNavigation" aria-label="Navegación principal">
+        <ul class="nav-links">
+          <li><a href="index.html#inicio" class="nav-link">Inicio</a></li>
+          <li><a href="index.html#catalogo" class="nav-link">Catálogo</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="cart-icon" id="cartIcon" type="button" aria-label="Ver carrito">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+        </button>
+        <button class="menu-toggle" aria-label="Menú" aria-controls="primaryNavigation" aria-expanded="false">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="personalize-page">
+    <div class="personalize-container">
+      <a href="index.html#catalogo" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver al catálogo
+      </a>
+
+      <div class="personalize-header">
+        <h1>Personaliza tu Regalo</h1>
+        <p>Haz que tu detalle sea único e inolvidable</p>
+      </div>
+
+      <div class="personalize-grid">
+        <!-- Left: Product Preview -->
+        <div class="preview-column">
+          <div class="preview-card">
+            <div class="preview-image">
+              <img id="previewProductImg" src="" alt="">
+              <div class="preview-custom-overlay" id="previewOverlay" style="display:none">
+                <div class="preview-custom-phrase" id="previewPhrase"></div>
+                <div class="preview-custom-song" id="previewSong"></div>
+              </div>
+            </div>
+            <div class="preview-info">
+              <h2 class="preview-name" id="previewName">Producto</h2>
+              <div class="preview-price" id="previewPrice">$0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Customization Form -->
+        <div class="customize-form">
+          <h2>Hazlo especial</h2>
+          <p class="form-subtitle">Completa los detalles para crear un regalo único</p>
+
+          <!-- Step 1: Upload Image -->
+          <div class="customize-step">
+            <div class="step-label">
+              <span class="step-number">1</span>
+              <span>Imagen de referencia</span>
+            </div>
+            <div class="upload-area" id="uploadArea" role="button" tabindex="0" aria-controls="imageInput" aria-describedby="uploadFeedback">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <p>Arrastra tu imagen aquí o <span class="upload-cta">haz clic para seleccionar</span></p>
+              <input type="file" id="imageInput" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden>
+            </div>
+            <div class="upload-preview" id="uploadPreview">
+              <img id="uploadedImage" src="" alt="Imagen subida">
+              <button class="replace-image" id="changeImage" type="button" aria-label="Cambiar imagen" title="Cambiar imagen">↻</button>
+              <button class="remove-image" id="removeImage" type="button" aria-label="Eliminar imagen" title="Eliminar imagen">&times;</button>
+            </div>
+            <p class="step-hint" id="uploadFeedback" role="status" aria-live="polite">JPG, JPEG, PNG o WEBP. Máximo 5 MB. Se almacenará al agregar el producto.</p>
+            <p class="step-hint upload-example-note" id="uploadExampleNote" hidden>La imagen que subas se utilizará para personalizar tu propia Luna. No cambia el modelo 3D de referencia.</p>
+          </div>
+
+          <div class="customize-step">
+            <div class="step-label">
+              <span class="step-number">2</span>
+              <span>Audio de referencia</span>
+            </div>
+            <div class="upload-area audio-upload-area" id="audioUploadArea" role="button" tabindex="0" aria-controls="audioInput" aria-describedby="audioFeedback">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+              <p>Haz clic para seleccionar un archivo de audio</p>
+              <input type="file" id="audioInput" accept=".mp3,.wav,.m4a,.ogg,audio/mpeg,audio/wav,audio/mp4,audio/ogg" hidden>
+            </div>
+            <div class="audio-reference-preview" id="audioPreview" hidden>
+              <div class="audio-file-details">
+                <span class="audio-file-name" id="audioFileName"></span>
+                <span class="audio-file-size" id="audioFileSize"></span>
+              </div>
+              <audio id="audioPlayer" controls preload="metadata"></audio>
+              <div class="reference-file-actions">
+                <button class="reference-file-button" id="changeAudio" type="button">Cambiar audio</button>
+                <button class="reference-file-button" id="removeAudio" type="button">Eliminar</button>
+              </div>
+            </div>
+            <p class="step-hint" id="audioFeedback" role="status" aria-live="polite">MP3, WAV, M4A u OGG. Máximo 15 MB. Se almacenará al agregar el producto.</p>
+          </div>
+
+          <!-- Step 2: Dedication Phrase -->
+          <div class="customize-step">
+            <div class="step-label">
+              <span class="step-number">3</span>
+              <span>Escribe tu dedicatoria</span>
+            </div>
+            <textarea class="phrase-input" id="phraseInput" placeholder="Escribe esa frase que quieres que quede grabada para siempre..." maxlength="150"></textarea>
+            <div class="phrase-counter"><span id="phraseCount">0</span>/150</div>
+          </div>
+
+          <!-- Step 3: Song -->
+          <div class="customize-step">
+            <div class="step-label">
+              <span class="step-number">4</span>
+              <span>Canción de dedicatoria</span>
+            </div>
+            <div class="song-input-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+              <input type="text" class="song-input" id="songInput" placeholder="Nombre de la canción o link de Spotify">
+            </div>
+            <p class="step-hint">La canción que los define. Escribe el nombre o pega un enlace.</p>
+          </div>
+
+          <!-- Step 4: Quantity -->
+          <div class="customize-step">
+            <div class="step-label">
+              <span class="step-number">5</span>
+              <span>Cantidad</span>
+            </div>
+            <div class="qty-selector">
+              <button class="qty-btn" id="qtyMinus">−</button>
+              <span class="qty-value" id="qtyValue">1</span>
+              <button class="qty-btn" id="qtyPlus">+</button>
+            </div>
+          </div>
+
+          <!-- Add to Cart -->
+          <button class="btn-add-cart" id="addToCartBtn">
+            🛒 Agregar al Carrito
+          </button>
+          <p class="step-hint order-feedback" id="orderFeedback" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <section class="luna-showcase" id="lunaShowcase" aria-labelledby="lunaShowcaseTitle" hidden>
+        <h2 id="lunaShowcaseTitle">Así convertimos un diseño en una Lámpara Luna</h2>
+        <p class="luna-showcase-intro">Este modelo es un ejemplo de referencia. La imagen de tu pedido se utiliza para personalizar tu propia Luna y no modifica esta demostración.</p>
+        <figure class="luna-model-figure">
+          <model-viewer id="lunaModel" alt="Ejemplo de Lámpara Luna personalizada" camera-controls touch-action="pan-y" interaction-prompt="auto" loading="lazy" exposure="0.7" hidden></model-viewer>
+          <div class="luna-stl-viewer" id="lunaStlViewer" hidden></div>
+          <figcaption>Modelo 3D de referencia</figcaption>
+        </figure>
+        <figure class="luna-design-figure">
+          <h3>Diseño utilizado para crear esta Luna</h3>
+          <img id="lunaReferenceImage" alt="Diseño utilizado en el ejemplo de Lámpara Luna" loading="lazy">
+        </figure>
+      </section>
+    </div>
+  </main>
+
+  <!-- Cart Sidebar -->
+  <div id="cart-sidebar"></div>
+
+  <script src="js/cloudinary-config.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/catalog-data.js"></script>
+  <script src="js/personalizar.js"></script>
+</body>
+</html>
+
