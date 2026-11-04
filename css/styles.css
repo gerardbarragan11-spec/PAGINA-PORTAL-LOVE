@@ -578,37 +578,70 @@ button {
    12. TRUST BAR
    ========================================================================== */
 .trust-bar {
-  background-color: var(--secondary-light);
-  padding: 3rem 0;
-  border-bottom: 1px solid var(--secondary);
+  position: relative;
+  z-index: 2;
+  background: var(--white);
+  padding: 0 0 3rem;
 }
+.trust-bar .container { margin-top: -2.5rem; }
 .trust-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--white);
+  border: 1px solid var(--secondary);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 14px 40px var(--shadow-strong);
+  padding: 0.5rem 0;
 }
 .trust-item {
   display: flex;
   align-items: center;
   gap: 1rem;
   justify-content: center;
+  padding: 1.5rem 1rem;
+  position: relative;
+}
+.trust-item + .trust-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background: var(--secondary);
 }
 .trust-icon {
+  flex: none;
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--secondary);
+  background: var(--secondary-light);
+  border: 1px solid var(--secondary);
   color: var(--primary-dark);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  transition: background var(--transition-base), color var(--transition-base);
+}
+.trust-item:hover .trust-icon {
+  background: var(--primary-dark);
+  color: var(--white);
 }
 .trust-text h4 {
-  margin: 0 0 0.25rem 0;
+  margin: 0;
   font-family: var(--font-body);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
+  font-weight: 600;
   color: var(--dark);
+}
+@media (max-width: 900px) {
+  .trust-grid { grid-template-columns: repeat(2, 1fr); }
+  .trust-item:nth-child(3)::before { display: none; }
+  .trust-item:nth-child(n + 3) { border-top: 1px solid var(--secondary); }
+}
+@media (max-width: 480px) {
+  .trust-bar .container { margin-top: -1.5rem; }
+  .trust-item { flex-direction: column; text-align: center; gap: 0.6rem; padding: 1.1rem 0.5rem; }
 }
 .trust-text p {
   margin: 0;
@@ -1418,43 +1451,106 @@ button {
 /* ==========================================================================
    18. CONTACT SECTION
    ========================================================================== */
+.contact {
+  background: linear-gradient(180deg, var(--white) 0%, var(--secondary-light) 100%) !important;
+}
 .contact-grid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 4rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 3rem;
+  align-items: stretch;
 }
 .contact-info-cards {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
+  justify-content: center;
+}
+.contact-kicker {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-accent);
+  font-size: var(--text-2xl);
+  font-style: italic;
+  color: var(--primary-dark);
 }
 .contact-card {
-  background: var(--secondary-light);
+  position: relative;
+  background: var(--white);
   border: 1px solid var(--secondary);
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: var(--radius-lg);
+  box-shadow: 0 4px 18px var(--shadow);
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.1rem;
+  color: inherit;
+  text-decoration: none;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
+.contact-card-link:hover,
+.contact-card-link:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 28px var(--shadow-strong);
+}
+.contact-card-link:focus-visible { outline: 2px solid var(--primary-dark); outline-offset: 3px; }
 .contact-icon {
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--secondary);
   color: var(--primary-dark);
-  font-size: 1.5rem;
+  transition: background var(--transition-base), color var(--transition-base);
 }
+.contact-card-link:hover .contact-icon,
+.contact-card-link:focus-visible .contact-icon {
+  background: var(--primary-dark);
+  color: var(--white);
+}
+.contact-details { min-width: 0; }
 .contact-details h4 {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.25rem 0;
   font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary-dark);
 }
 .contact-details p {
   margin: 0;
-  color: var(--muted);
+  color: var(--dark);
+  overflow-wrap: anywhere;
 }
+.contact-arrow {
+  margin-left: auto;
+  color: var(--primary-dark);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity var(--transition-base), transform var(--transition-base);
+}
+.contact-card-link:hover .contact-arrow,
+.contact-card-link:focus-visible .contact-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+@media (hover: none) { .contact-arrow { opacity: 1; transform: none; } }
 
 .contact-form {
   background: var(--white);
-  padding: 3rem;
+  padding: 2.5rem;
   border: 1px solid var(--secondary);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 12px 40px var(--shadow);
+  border-top: 4px solid var(--primary);
+}
+.contact-form-title {
+  margin: 0 0 2rem;
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  color: var(--dark);
 }
 .form-group {
   position: relative;
@@ -1898,6 +1994,8 @@ textarea.form-control {
   .about-grid, .contact-grid {
     grid-template-columns: 1fr;
   }
+  .contact-form { padding: 1.75rem; }
+  .contact-card { padding: 1.15rem; }
   
   .footer-grid {
     grid-template-columns: 1fr 1fr;
