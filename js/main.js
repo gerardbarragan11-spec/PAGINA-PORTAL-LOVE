@@ -200,7 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const productShowcaseTrack = document.getElementById('showcaseTrack');
   if (productShowcaseTrack) {
     const clientMedia = window.PORTALOVERS_CLIENT_MEDIA || [];
-    const motionReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     const videoClock = new Map();
     const activeVideos = new Set();
 
@@ -220,17 +219,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const startVideo = video => {
       activeVideos.add(video);
       if (!video.getAttribute('src')) {
-        video.preload = 'metadata';
-        video.src = `${video.dataset.src}#t=0.1`;
+        video.preload = 'auto';
+        video.src = encodeURI(video.dataset.src);
+        video.load();
       }
-      if (motionReduced.matches) return;
       const play = () => {
         alignVideo(video);
         video.play().catch(() => {});
       };
-      if (video.readyState >= 1) play();
-      else video.addEventListener('loadedmetadata', play, { once: true });
+      if (video.readyState >= 2) play();
+      else {
+        video.addEventListener('loadeddata', play, { once: true });
+        video.addEventListener('canplay', play, { once: true });
+      }
     };
+
+    // Mobile browsers (data saver, low power) may block autoplay until the first touch.
+    const retryPlayback = () => activeVideos.forEach(video => {
+      if (video.paused) video.play().catch(() => {});
+    });
+    ['touchstart', 'pointerdown', 'scroll'].forEach(type => {
+      window.addEventListener(type, retryPlayback, { passive: true, once: true });
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) retryPlayback();
+    });
     const videoObserver = 'IntersectionObserver' in window
       ? new IntersectionObserver(entries => {
         entries.forEach(entry => {
