@@ -73,8 +73,215 @@
           <h2>Hazlo especial</h2>
           <p class="form-subtitle">Completa los detalles para crear un regalo único</p>
 
+          <section class="luna-customization" id="lunaCustomization" aria-label="Personalización de Luna" hidden>
+            <section class="luna-size-selector" aria-labelledby="lunaSizeTitle">
+              <div class="luna-step-heading">
+                <div><h3 id="lunaSizeTitle">Elige tu talla</h3><p>Selecciona una talla para continuar.</p></div>
+              </div>
+              <div class="luna-size-options" role="group" aria-label="Tallas disponibles">
+                <button class="luna-size-card" type="button" data-luna-size="esencial" aria-pressed="false"><strong>Esencial</strong><span class="luna-size-price">Precio por cotizar</span></button>
+                <button class="luna-size-card" type="button" data-luna-size="plus" aria-pressed="false"><span class="luna-size-badge">Más pedida</span><strong>Plus</strong><span class="luna-size-price">Precio por cotizar</span></button>
+                <button class="luna-size-card" type="button" data-luna-size="premium" aria-pressed="false"><strong>Premium</strong><span class="luna-size-price">Precio por cotizar</span></button>
+              </div>
+              <p class="step-hint" id="lunaSizeFeedback" role="status" aria-live="polite">Elige una talla para empezar a personalizar.</p>
+            </section>
+
+            <div class="luna-flow" id="lunaFlow" hidden>
+              <div class="luna-progress" role="progressbar" aria-label="Progreso de personalización" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+                <span id="lunaProgressText">Selecciona una talla</span>
+                <div class="luna-progress-track"><span id="lunaProgressFill"></span></div>
+              </div>
+
+              <section class="luna-step" id="lunaPhotoStep" aria-labelledby="lunaPhotoTitle">
+                <div class="luna-step-heading"><span class="step-number">1</span><div><h3 id="lunaPhotoTitle">Tu foto favorita</h3><p id="lunaPhotoRequirement"></p></div></div>
+                <div class="cristal-photo-grid luna-photo-grid" id="lunaPhotoGrid"></div>
+                <p class="step-hint" id="lunaPhotoFeedback" role="status" aria-live="polite"></p>
+              </section>
+
+              <section class="luna-step" id="lunaQrStep" aria-labelledby="lunaQrTitle" hidden>
+                <div class="luna-step-heading"><span class="step-number">2</span><div><h3 id="lunaQrTitle"></h3><p id="lunaQrHint"></p></div></div>
+                <div class="luna-qr-choices" id="lunaQrChoices" role="group" aria-label="Opciones para el QR" aria-required="true" hidden>
+                  <button class="luna-qr-choice" type="button" data-luna-qr="audio" aria-pressed="false"><strong>Audio o latido del corazón de tu bebé</strong><span>Sube un archivo de audio.</span></button>
+                  <button class="luna-qr-choice" type="button" data-luna-qr="song-link" aria-pressed="false"><strong>Link de la canción</strong><span>Agrega el enlace que se asociará al QR.</span></button>
+                </div>
+                <div id="lunaAudioMount" hidden></div>
+                <div id="lunaSongMount" hidden></div>
+              </section>
+
+              <div id="lunaDedicationMount"></div>
+
+              <section class="luna-step" id="lunaBaseStep" aria-labelledby="lunaBaseTitle">
+                <div class="luna-step-heading"><span class="step-number">4</span><div><h3 id="lunaBaseTitle">Base personalizada</h3><p id="lunaBaseHint"></p></div></div>
+                <label class="luna-base-addon" id="lunaBaseAddonOption" hidden>
+                  <input type="checkbox" id="lunaBaseAddonToggle">
+                  <span><strong>Agregar base personalizada</strong><small id="lunaBaseAddonPriceLabel"></small></span>
+                </label>
+                <div class="luna-base-field" id="lunaBaseField" hidden>
+                  <label id="lunaBaseTextLabel" for="lunaBaseText">Texto para la base</label>
+                  <input class="song-input luna-text-input" type="text" id="lunaBaseText" maxlength="30" placeholder="Escríbelo aquí" aria-describedby="lunaBaseCounter" aria-required="false">
+                  <div class="phrase-counter" id="lunaBaseCounter"><span id="lunaBaseCount">0</span>/30</div>
+                </div>
+              </section>
+
+              <section class="luna-step" id="lunaCardStep" aria-labelledby="lunaCardTitle">
+                <div class="luna-step-heading"><span class="step-number">5</span><div><h3 id="lunaCardTitle">Tarjeta impresa</h3><p>Completa los datos para tu tarjeta.</p></div></div>
+                <div class="luna-card-fields">
+                  <label for="lunaCardFrom">De:<input class="song-input luna-text-input" id="lunaCardFrom" type="text" autocomplete="name"></label>
+                  <label for="lunaCardTo">Para:<input class="song-input luna-text-input" id="lunaCardTo" type="text"></label>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="cristal-customization" id="cristalCustomization" aria-label="Personalización de Cristal Love" hidden>
+            <section class="cristal-step" aria-labelledby="cristalPhotosTitle">
+              <div class="cristal-step-heading">
+                <span class="step-number">1</span>
+                <div><h3 id="cristalPhotosTitle">Tus fotos favoritas</h3><p id="cristalPhotoRequirement"></p></div>
+              </div>
+              <div class="cristal-photo-grid" id="cristalPhotoGrid"></div>
+              <p class="step-hint" id="cristalPhotoFeedback" role="status" aria-live="polite"></p>
+            </section>
+
+            <section class="cristal-step" aria-labelledby="cristalMessageTitle">
+              <div class="cristal-step-heading">
+                <span class="step-number">2</span>
+                <div><h3 id="cristalMessageTitle">Elige tu mensaje</h3><p>Selecciona una opción.</p></div>
+              </div>
+              <div class="cristal-choice-grid cristal-message-choices" role="group" aria-label="Opciones de mensaje">
+                <button class="cristal-choice-card" type="button" data-choice-group="cristal-message" data-value="1" aria-pressed="false"><strong>Opción 1</strong><span>Frase pendiente de definir</span></button>
+                <button class="cristal-choice-card" type="button" data-choice-group="cristal-message" data-value="2" aria-pressed="false"><strong>Opción 2</strong><span>Frase pendiente de definir</span></button>
+                <button class="cristal-choice-card" type="button" data-choice-group="cristal-message" data-value="3" aria-pressed="false"><strong>Opción 3</strong><span>Frase pendiente de definir</span></button>
+              </div>
+            </section>
+
+            <section class="cristal-step" aria-labelledby="cristalDedicationTitle">
+              <div class="cristal-step-heading">
+                <span class="step-number">3</span>
+                <div><h3 id="cristalDedicationTitle">Escribe la dedicatoria de tu tarjeta impresa</h3><p>Máximo 150 caracteres.</p></div>
+              </div>
+              <textarea class="phrase-input cristal-textarea" id="cristalDedication" maxlength="150" aria-describedby="cristalDedicationCounter" placeholder="Escribe tu dedicatoria"></textarea>
+              <div class="phrase-counter" id="cristalDedicationCounter"><span id="cristalDedicationCount">0</span>/150</div>
+            </section>
+
+            <section class="cristal-step" aria-labelledby="cristalBaseTitle">
+              <div class="cristal-step-heading">
+                <span class="step-number">4</span>
+                <div><h3 id="cristalBaseTitle">Elige el color de la base</h3><p>Selecciona una opción.</p></div>
+              </div>
+              <div class="cristal-choice-grid cristal-color-choices" role="group" aria-label="Color de la base">
+                <button class="cristal-choice-card cristal-color-card" type="button" data-choice-group="cristal-base" data-value="rojo" aria-pressed="false"><span class="cristal-color-swatch cristal-swatch-red" aria-hidden="true"></span><strong>Rojo</strong><small>Muestra referencial</small></button>
+                <button class="cristal-choice-card cristal-color-card" type="button" data-choice-group="cristal-base" data-value="lila" aria-pressed="false"><span class="cristal-color-swatch cristal-swatch-lilac" aria-hidden="true"></span><strong>Lila</strong><small>Muestra referencial</small></button>
+                <button class="cristal-choice-card cristal-color-card" type="button" data-choice-group="cristal-base" data-value="beige-arequipe" aria-pressed="false"><span class="cristal-color-swatch cristal-swatch-beige" aria-hidden="true"></span><strong>Beige arequipe</strong><small>Muestra referencial</small></button>
+              </div>
+            </section>
+
+            <section class="cristal-step" aria-labelledby="cristalComplementTitle">
+              <div class="cristal-step-heading">
+                <span class="step-number">5</span>
+                <div><h3 id="cristalComplementTitle">Elige una opción para complementar tu regalo (sin costo adicional)</h3><p>Selecciona una alternativa.</p></div>
+              </div>
+              <div class="cristal-choice-grid cristal-complement-choices" role="group" aria-label="Complementos sin costo adicional">
+                <button class="cristal-choice-card" type="button" data-choice-group="cristal-complement" data-value="vela" aria-pressed="false"><strong>Vela de corazón tejido</strong><span>Sin costo adicional</span></button>
+                <button class="cristal-choice-card" type="button" data-choice-group="cristal-complement" data-value="frase-love" aria-pressed="false"><strong>Frase Love</strong><span>Sin costo adicional</span></button>
+              </div>
+              <div class="cristal-love-options" id="cristalLoveOptions" hidden>
+                <div class="cristal-choice-grid cristal-mode-choices" role="group" aria-label="Modalidad de Frase Love">
+                  <button class="cristal-choice-card" type="button" data-choice-group="cristal-love-mode" data-value="predeterminada" aria-pressed="false">Elegir frase predeterminada</button>
+                  <button class="cristal-choice-card" type="button" data-choice-group="cristal-love-mode" data-value="personalizada" aria-pressed="false">Escribir una frase personalizada</button>
+                </div>
+                <div class="cristal-choice-grid cristal-love-presets" id="cristalLovePresetChoices" role="group" aria-label="Frases Love predeterminadas" hidden>
+                  <button class="cristal-choice-card" type="button" data-choice-group="cristal-love-preset" data-value="1" aria-pressed="false"><strong>Opción 1</strong><span>Frase pendiente de definir</span></button>
+                  <button class="cristal-choice-card" type="button" data-choice-group="cristal-love-preset" data-value="2" aria-pressed="false"><strong>Opción 2</strong><span>Frase pendiente de definir</span></button>
+                  <button class="cristal-choice-card" type="button" data-choice-group="cristal-love-preset" data-value="3" aria-pressed="false"><strong>Opción 3</strong><span>Frase pendiente de definir</span></button>
+                </div>
+                <div class="cristal-love-custom" id="cristalLoveCustomField" hidden>
+                  <label for="cristalLoveText">Tu frase Love</label>
+                  <input class="song-input cristal-love-input" type="text" id="cristalLoveText" maxlength="30" aria-describedby="cristalLoveCounter" placeholder="Escribe tu frase">
+                  <div class="phrase-counter" id="cristalLoveCounter"><span id="cristalLoveCount">0</span>/30</div>
+                </div>
+              </div>
+            </section>
+          </section>
+
+          <section class="portrait-customization" id="portraitCustomization" aria-label="Personalización de portarretratos" hidden>
+            <div class="portrait-included-benefit" id="portraitIncludedBenefit" role="note" hidden>
+              <span class="portrait-included-mark" aria-hidden="true">✓</span>
+              <span id="portraitIncludedBenefitText"></span>
+            </div>
+            <section class="portrait-step" aria-labelledby="portraitPhotosTitle">
+              <div class="cristal-step-heading">
+                <span class="step-number">1</span>
+                <div><h3 id="portraitPhotosTitle">Tus fotografías</h3><p>Sube de 1 a 4 fotos. Cada archivo puede pesar máximo 5 MB.</p></div>
+              </div>
+              <div class="cristal-photo-grid" id="portraitPhotoGrid"></div>
+              <p class="step-hint" id="portraitPhotoFeedback" role="status" aria-live="polite"></p>
+            </section>
+
+            <section class="portrait-step" id="portraitSongStep" aria-labelledby="portraitSongTitle" hidden>
+              <div class="cristal-step-heading">
+                <span class="step-number">2</span>
+                <div><h3 id="portraitSongTitle">La canción</h3><p>Escribe el nombre o pega el enlace de la canción.</p></div>
+              </div>
+              <input class="song-input portrait-text-input" id="portraitSongInput" type="text" placeholder="Nombre o link de la canción">
+            </section>
+
+            <section class="portrait-step" id="portraitAnniversaryStep" aria-labelledby="portraitAnniversaryTitle" hidden>
+              <div class="cristal-step-heading">
+                <span class="step-number">3</span>
+                <div><h3 id="portraitAnniversaryTitle">Datos del aniversario</h3><p>Completa los nombres y la fecha.</p></div>
+              </div>
+              <div class="luna-card-fields portrait-name-fields">
+                <label for="portraitNameOne">Nombre 1<input class="song-input portrait-text-input" id="portraitNameOne" type="text" autocomplete="name"></label>
+                <label for="portraitNameTwo">Nombre 2<input class="song-input portrait-text-input" id="portraitNameTwo" type="text"></label>
+              </div>
+              <fieldset class="portrait-date-fields">
+                <legend>Fecha (Día / Mes / Año)</legend>
+                <label for="portraitDay">Día<input class="song-input portrait-text-input" id="portraitDay" type="number" min="1" max="31" inputmode="numeric"></label>
+                <label for="portraitMonth">Mes<input class="song-input portrait-text-input" id="portraitMonth" type="number" min="1" max="12" inputmode="numeric"></label>
+                <label for="portraitYear">Año<input class="song-input portrait-text-input" id="portraitYear" type="number" min="1" max="9999" inputmode="numeric"></label>
+              </fieldset>
+            </section>
+
+            <section class="portrait-step" id="portraitAmoreStep" aria-labelledby="portraitAmoreTitle" hidden>
+              <div class="cristal-step-heading">
+                <span class="step-number">2</span>
+                <div><h3 id="portraitAmoreTitle">Elige cómo compartir tu canción</h3><p>Selecciona una sola modalidad.</p></div>
+              </div>
+              <div class="cristal-choice-grid cristal-complement-choices portrait-mode-choices" role="group" aria-label="Modalidad de canción">
+                <button class="cristal-choice-card" type="button" data-portrait-song-mode="link" aria-pressed="false">Compartir enlace</button>
+                <button class="cristal-choice-card" type="button" data-portrait-song-mode="audio" aria-pressed="false">Subir archivo de audio</button>
+              </div>
+              <div class="portrait-song-link" id="portraitSongLinkField" hidden>
+                <label for="portraitSongLink">Enlace de la canción</label>
+                <input class="song-input portrait-text-input" id="portraitSongLink" type="url" inputmode="url" placeholder="https://">
+              </div>
+              <div class="portrait-audio-mount" id="portraitAudioMount" hidden></div>
+            </section>
+
+            <section class="portrait-step" id="portraitDedicationStep" aria-labelledby="portraitDedicationTitle">
+              <div class="cristal-step-heading">
+                <span class="step-number" id="portraitDedicationNumber">3</span>
+                <div><h3 id="portraitDedicationTitle">Dedicatoria</h3><p id="portraitDedicationHint"></p></div>
+              </div>
+              <textarea class="phrase-input cristal-textarea" id="portraitDedication" placeholder="Escribe tu dedicatoria"></textarea>
+              <div class="phrase-counter" id="portraitDedicationCounter" hidden><span id="portraitDedicationCount">0</span>/80</div>
+            </section>
+
+            <section class="portrait-step" id="portraitSendToStep" aria-labelledby="portraitSendToTitle" hidden>
+              <div class="cristal-step-heading">
+                <span class="step-number">5</span>
+                <div><h3 id="portraitSendToTitle">Tarjeta impresa</h3><p>Completa los datos de entrega.</p></div>
+              </div>
+              <div class="luna-card-fields">
+                <label for="portraitFrom">De:<input class="song-input portrait-text-input" id="portraitFrom" type="text"></label>
+                <label for="portraitTo">Para:<input class="song-input portrait-text-input" id="portraitTo" type="text"></label>
+              </div>
+            </section>
+          </section>
+
           <!-- Step 1: Upload Image -->
-          <div class="customize-step">
+          <div class="customize-step" id="imageStep">
             <div class="step-label">
               <span class="step-number">1</span>
               <span>Imagen de referencia</span>
@@ -93,11 +300,12 @@
             <p class="step-hint upload-example-note" id="uploadExampleNote" hidden>La imagen que subas se utilizará para personalizar tu propia Luna. No cambia el modelo 3D de referencia.</p>
           </div>
 
-          <div class="customize-step">
+          <div class="customize-step" id="audioStep">
             <div class="step-label">
               <span class="step-number">2</span>
               <span>Audio de referencia</span>
             </div>
+            <div id="lunaAudioControls">
             <div class="upload-area audio-upload-area" id="audioUploadArea" role="button" tabindex="0" aria-controls="audioInput" aria-describedby="audioFeedback">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
               <p>Haz clic para seleccionar un archivo de audio</p>
@@ -115,10 +323,11 @@
               </div>
             </div>
             <p class="step-hint" id="audioFeedback" role="status" aria-live="polite">MP3, WAV, M4A u OGG. Máximo 15 MB. Se almacenará al agregar el producto.</p>
+            </div>
           </div>
 
           <!-- Step 2: Dedication Phrase -->
-          <div class="customize-step">
+          <div class="customize-step" id="dedicationStep">
             <div class="step-label">
               <span class="step-number">3</span>
               <span>Escribe tu dedicatoria</span>
@@ -128,20 +337,22 @@
           </div>
 
           <!-- Step 3: Song -->
-          <div class="customize-step">
+          <div class="customize-step" id="songStep">
             <div class="step-label">
               <span class="step-number">4</span>
               <span>Canción de dedicatoria</span>
             </div>
+            <div id="lunaSongControls">
             <div class="song-input-wrapper">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
               <input type="text" class="song-input" id="songInput" placeholder="Nombre de la canción o link de Spotify">
             </div>
             <p class="step-hint">La canción que los define. Escribe el nombre o pega un enlace.</p>
+            </div>
           </div>
 
           <!-- Step 4: Quantity -->
-          <div class="customize-step">
+          <div class="customize-step" id="quantityStep">
             <div class="step-label">
               <span class="step-number">5</span>
               <span>Cantidad</span>
@@ -152,6 +363,40 @@
               <button class="qty-btn" id="qtyPlus">+</button>
             </div>
           </div>
+
+          <section class="shipping-data-step" id="shippingDataStep" aria-labelledby="shippingDataTitle">
+            <div class="shipping-step-heading">
+              <h3 id="shippingDataTitle">Datos de envío</h3>
+              <p>Completa estos datos para coordinar la entrega.</p>
+            </div>
+            <div class="shipping-fields">
+              <label class="shipping-field shipping-field-full" for="shippingFullName">
+                Nombre y apellido
+                <input id="shippingFullName" type="text" autocomplete="name" placeholder="Nombre completo del destinatario" required aria-required="true">
+              </label>
+              <label class="shipping-field" for="shippingAddress">
+                Dirección
+                <input id="shippingAddress" type="text" autocomplete="street-address" placeholder="Ej. Calle 10 # 5-20, apartamento 302" required aria-required="true">
+              </label>
+              <label class="shipping-field" for="shippingNeighborhood">
+                Barrio
+                <input id="shippingNeighborhood" type="text" autocomplete="address-line2" placeholder="Escribe el barrio donde se realizará la entrega" required aria-required="true">
+              </label>
+              <label class="shipping-field" for="shippingCity">
+                Ciudad
+                <input id="shippingCity" type="text" autocomplete="address-level2" placeholder="Escribe la ciudad de destino" required aria-required="true">
+              </label>
+              <label class="shipping-field shipping-field-full" for="shippingPhone">
+                Teléfono
+                <input id="shippingPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Número de contacto del destinatario" required aria-required="true">
+              </label>
+              <label class="shipping-field shipping-field-full" for="shippingDetails">
+                Detalles adicionales (opcional)
+                <textarea id="shippingDetails" placeholder="Agrega referencias, indicaciones para llegar o información útil para la entrega (opcional)"></textarea>
+              </label>
+            </div>
+            <p class="shipping-feedback" id="shippingFeedback" role="status" aria-live="polite"></p>
+          </section>
 
           <!-- Add to Cart -->
           <button class="btn-add-cart" id="addToCartBtn">

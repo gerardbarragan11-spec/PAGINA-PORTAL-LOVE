@@ -70,7 +70,20 @@ const Cart = {
   },
   
   getTotal() {
-    return this.getItems().reduce((sum, item) => sum + (Number.isFinite(item.price) ? item.price * item.quantity : 0), 0);
+    return this.getItems().reduce((sum, item) => {
+      const productTotal = Number.isFinite(item.price) ? item.price * item.quantity : 0;
+      const baseAddon = Number.isFinite(item.customization.luna?.base?.addonPrice)
+        ? item.customization.luna.base.addonPrice * item.quantity
+        : 0;
+      return sum + productTotal + baseAddon;
+    }, 0);
+  },
+
+  getBaseAddonsTotal() {
+    return this.getItems().reduce((sum, item) => {
+      const addonPrice = item.customization.luna?.base?.addonPrice;
+      return sum + (Number.isFinite(addonPrice) ? addonPrice * item.quantity : 0);
+    }, 0);
   },
   
   clear() {
@@ -172,8 +185,8 @@ const Cart = {
       cartItems.innerHTML = items.map((item, index) => {
         const customization = item.customization;
         let customHTML = '';
-        if (customization.phrase) customHTML += `<span>✍️ "${this.escapeHTML(customization.phrase)}"</span>`;
-        if (customization.song) customHTML += `<span>🎵 ${this.escapeHTML(customization.song)}</span>`;
+        if (customization.phrase && !customization.luna && !customization.portrait) customHTML += `<span>✍️ "${this.escapeHTML(customization.phrase)}"</span>`;
+        if (customization.song && !customization.luna && !customization.portrait) customHTML += `<span>🎵 ${this.escapeHTML(customization.song)}</span>`;
         if (customization.imageReference?.url) {
           customHTML += `<a class="cart-reference-link" href="${this.escapeHTML(customization.imageReference.url)}" target="_blank" rel="noopener noreferrer">🖼️ Imagen: ${this.escapeHTML(customization.imageReference.name)}</a>`;
         } else if (customization.uploadedImageName) {
@@ -181,6 +194,87 @@ const Cart = {
         }
         if (customization.audioReference?.url) {
           customHTML += `<a class="cart-reference-link" href="${this.escapeHTML(customization.audioReference.url)}" target="_blank" rel="noopener noreferrer">🎵 Audio: ${this.escapeHTML(customization.audioReference.name)}</a>`;
+        }
+        const cristalLove = customization.cristalLove;
+        if (cristalLove) {
+          customHTML += `<span>Variante: ${this.escapeHTML(cristalLove.variant)}</span>`;
+          (Array.isArray(cristalLove.photos) ? cristalLove.photos : []).forEach((photo, photoIndex) => {
+            if (photo?.url) {
+              customHTML += `<a class="cart-reference-link" href="${this.escapeHTML(photo.url)}" target="_blank" rel="noopener noreferrer">Foto ${photoIndex + 1}: ${this.escapeHTML(photo.name)}</a>`;
+            }
+          });
+          if (cristalLove.messageOption?.label) {
+            customHTML += `<span>Mensaje: ${this.escapeHTML(cristalLove.messageOption.label)} (frase pendiente de definir)</span>`;
+          }
+          if (cristalLove.dedication) customHTML += `<span class="cart-cristal-detail">Dedicatoria: ${this.escapeHTML(cristalLove.dedication)}</span>`;
+          if (cristalLove.baseColor?.label) customHTML += `<span>Base: ${this.escapeHTML(cristalLove.baseColor.label)}</span>`;
+          if (cristalLove.complement?.label) {
+            customHTML += `<span>Complemento sin costo: ${this.escapeHTML(cristalLove.complement.label)}</span>`;
+            const lovePhrase = cristalLove.complement.phrase;
+            if (lovePhrase?.mode === 'predeterminada') {
+              customHTML += `<span>Frase Love: Opción ${this.escapeHTML(lovePhrase.option)} (frase pendiente de definir)</span>`;
+            } else if (lovePhrase?.mode === 'personalizada' && lovePhrase.text) {
+              customHTML += `<span class="cart-cristal-detail">Frase Love: ${this.escapeHTML(lovePhrase.text)}</span>`;
+            }
+          }
+        }
+        const luna = customization.luna;
+        if (luna) {
+          customHTML += `<span>Talla: ${this.escapeHTML(luna.sizeLabel)}</span>`;
+          (Array.isArray(luna.photos) ? luna.photos : []).forEach((photo, photoIndex) => {
+            if (photo?.url) {
+              customHTML += `<a class="cart-reference-link" href="${this.escapeHTML(photo.url)}" target="_blank" rel="noopener noreferrer">Foto ${photoIndex + 1}: ${this.escapeHTML(photo.name)}</a>`;
+            }
+          });
+          if (luna.qr?.option === 'audio') customHTML += '<span>QR: Audio o latido del corazón</span>';
+          if (luna.qr?.option === 'song-link' && luna.qr.songLink) {
+            customHTML += `<span>QR: ${this.escapeHTML(luna.qr.songLink)}</span>`;
+          }
+          if (luna.qr?.option === 'song' && luna.qr.song) {
+            customHTML += `<span>Canción: ${this.escapeHTML(luna.qr.song)}</span>`;
+          }
+          if (luna.dedication) customHTML += `<span>Dedicatoria grabada: ${this.escapeHTML(luna.dedication)}</span>`;
+          if (luna.base?.added) {
+            const baseDescription = luna.base.included
+              ? 'Base personalizada incluida'
+              : `Base personalizada +$${luna.base.addonPrice.toLocaleString('es-CO')} COP`;
+            customHTML += `<span>${this.escapeHTML(baseDescription)}</span>`;
+            if (luna.base.text) customHTML += `<span>Texto de la base: ${this.escapeHTML(luna.base.text)}</span>`;
+          }
+          if (luna.printedCard?.from) customHTML += `<span>De: ${this.escapeHTML(luna.printedCard.from)}</span>`;
+          if (luna.printedCard?.to) customHTML += `<span>Para: ${this.escapeHTML(luna.printedCard.to)}</span>`;
+        }
+        const portrait = customization.portrait;
+        if (portrait) {
+          (Array.isArray(portrait.photos) ? portrait.photos : []).forEach((photo, photoIndex) => {
+            if (photo?.url) {
+              customHTML += `<a class="cart-reference-link" href="${this.escapeHTML(photo.url)}" target="_blank" rel="noopener noreferrer">Foto ${photoIndex + 1}: ${this.escapeHTML(photo.name)}</a>`;
+            }
+          });
+          if (portrait.song?.mode === 'name-or-link') customHTML += `<span>Canción: ${this.escapeHTML(portrait.song.value)}</span>`;
+          if (portrait.song?.mode === 'link') customHTML += `<span>Link de la canción: ${this.escapeHTML(portrait.song.value)}</span>`;
+          if (portrait.song?.mode === 'audio') customHTML += '<span>Canción: archivo de audio adjunto</span>';
+          if (portrait.names?.first) customHTML += `<span>Nombres: ${this.escapeHTML(portrait.names.first)} y ${this.escapeHTML(portrait.names.second)}</span>`;
+          if (portrait.anniversaryDate) customHTML += `<span>Fecha: ${this.escapeHTML(portrait.anniversaryDate)}</span>`;
+          if (portrait.dedication?.text) {
+            const dedicationLabel = portrait.dedication.type === 'grabada' ? 'Dedicatoria grabada' : 'Dedicatoria impresa';
+            customHTML += `<span>${dedicationLabel}: ${this.escapeHTML(portrait.dedication.text)}</span>`;
+          }
+          if (portrait.card?.from) customHTML += `<span>De: ${this.escapeHTML(portrait.card.from)}</span>`;
+          if (portrait.card?.to) customHTML += `<span>Para: ${this.escapeHTML(portrait.card.to)}</span>`;
+          if (portrait.includedBenefit?.label && portrait.includedBenefit.cost === 0) {
+            customHTML += `<span>Incluido sin costo: ${this.escapeHTML(portrait.includedBenefit.label)}</span>`;
+          }
+        }
+        const shipping = customization.shipping;
+        if (shipping) {
+          customHTML += '<span class="cart-shipping-detail"><strong>Datos de envío</strong></span>';
+          if (shipping.fullName) customHTML += `<span class="cart-shipping-detail">Destinatario: ${this.escapeHTML(shipping.fullName)}</span>`;
+          if (shipping.address) customHTML += `<span class="cart-shipping-detail">Dirección: ${this.escapeHTML(shipping.address)}</span>`;
+          if (shipping.neighborhood) customHTML += `<span class="cart-shipping-detail">Barrio: ${this.escapeHTML(shipping.neighborhood)}</span>`;
+          if (shipping.city) customHTML += `<span class="cart-shipping-detail">Ciudad: ${this.escapeHTML(shipping.city)}</span>`;
+          if (shipping.phone) customHTML += `<span class="cart-shipping-detail">Teléfono: ${this.escapeHTML(shipping.phone)}</span>`;
+          if (shipping.additionalDetails) customHTML += `<span class="cart-shipping-detail">Detalles adicionales: ${this.escapeHTML(shipping.additionalDetails)}</span>`;
         }
 
         return `
@@ -206,7 +300,12 @@ const Cart = {
     }
 
     const hasPriceOnRequest = items.some(item => !Number.isFinite(item.price));
-    cartTotal.textContent = hasPriceOnRequest ? 'Por cotizar' : '$' + this.getTotal().toLocaleString('es-CO');
+    const baseAddonsTotal = this.getBaseAddonsTotal();
+    cartTotal.textContent = hasPriceOnRequest
+      ? baseAddonsTotal > 0
+        ? `Por cotizar + $${baseAddonsTotal.toLocaleString('es-CO')} en bases`
+        : 'Por cotizar'
+      : '$' + this.getTotal().toLocaleString('es-CO');
   },
 
   openSidebar() {
@@ -246,19 +345,95 @@ const Cart = {
       if (c.imageReference?.url) message += `🖼️ Imagen de referencia: ${c.imageReference.url}\n`;
       else if (c.uploadedImageName) message += `📸 Imagen seleccionada: ${c.uploadedImageName} (sin enlace almacenado)\n`;
       if (c.audioReference?.url) message += `🎵 Audio de referencia: ${c.audioReference.url}\n`;
-      if (c.phrase) {
+      if (c.phrase && !c.luna && !c.portrait) {
         message += `✍️ Frase: "${c.phrase}"\n`;
       }
-      if (c.song) {
+      if (c.song && !c.luna && !c.portrait) {
         message += `🎵 Canción: ${c.song}\n`;
+      }
+      const cristalLove = c.cristalLove;
+      if (cristalLove) {
+        message += `🧩 Variante Cristal Love: ${cristalLove.variant} (${cristalLove.theme})\n`;
+        (Array.isArray(cristalLove.photos) ? cristalLove.photos : []).forEach((photo, photoIndex) => {
+          if (photo?.url) message += `📸 Fotografía ${photoIndex + 1}: ${photo.url}\n`;
+        });
+        if (cristalLove.messageOption?.label) {
+          message += `💌 Mensaje predeterminado: ${cristalLove.messageOption.label} (frase pendiente de definir)\n`;
+        }
+        if (cristalLove.dedication) message += `📝 Dedicatoria de tarjeta: ${cristalLove.dedication}\n`;
+        if (cristalLove.baseColor?.label) message += `🎨 Color de la base: ${cristalLove.baseColor.label}\n`;
+        if (cristalLove.complement?.id === 'vela') {
+          message += '🎁 Complemento sin costo adicional: Vela de corazón tejido\n';
+        } else if (cristalLove.complement?.id === 'frase-love') {
+          message += '🎁 Complemento sin costo adicional: Frase Love\n';
+          const lovePhrase = cristalLove.complement.phrase;
+          if (lovePhrase?.mode === 'predeterminada') {
+            message += `💬 Frase Love: Opción ${lovePhrase.option} (frase pendiente de definir)\n`;
+          } else if (lovePhrase?.mode === 'personalizada') {
+            message += `💬 Frase Love personalizada: ${lovePhrase.text}\n`;
+          }
+        }
+      }
+      const luna = c.luna;
+      if (luna) {
+        message += `🌙 Luna: ${luna.productName} · Talla ${luna.sizeLabel}\n`;
+        (Array.isArray(luna.photos) ? luna.photos : []).forEach((photo, photoIndex) => {
+          if (photo?.url) message += `📸 Foto ${photoIndex + 1}: ${photo.url}\n`;
+        });
+        if (luna.qr?.option === 'audio') message += '🔊 QR: Audio o latido del corazón del bebé\n';
+        if (luna.qr?.option === 'song-link') message += `🔗 Link del QR: ${luna.qr.songLink}\n`;
+        if (luna.qr?.option === 'song' && luna.qr.song) message += `🎵 Canción: ${luna.qr.song}\n`;
+        if (luna.dedication) message += `✍️ Dedicatoria grabada: ${luna.dedication}\n`;
+        if (luna.base?.added) {
+          message += luna.base.included
+            ? '🪵 Base personalizada: incluida en la talla\n'
+            : `🪵 Base personalizada: $${luna.base.addonPrice.toLocaleString('es-CO')} COP x ${item.quantity} = $${(luna.base.addonPrice * item.quantity).toLocaleString('es-CO')} COP\n`;
+          if (luna.base.text) message += `🖋️ Texto de la base: ${luna.base.text}\n`;
+        }
+        if (luna.printedCard?.from) message += `💌 De: ${luna.printedCard.from}\n`;
+        if (luna.printedCard?.to) message += `💌 Para: ${luna.printedCard.to}\n`;
+      }
+      const portrait = c.portrait;
+      if (portrait) {
+        (Array.isArray(portrait.photos) ? portrait.photos : []).forEach((photo, photoIndex) => {
+          if (photo?.url) message += `📸 Foto ${photoIndex + 1}: ${photo.url}\n`;
+        });
+        if (portrait.song?.mode === 'name-or-link') message += `🎵 Canción: ${portrait.song.value}\n`;
+        if (portrait.song?.mode === 'link') message += `🔗 Link de la canción: ${portrait.song.value}\n`;
+        if (portrait.song?.mode === 'audio') message += '🎵 Canción: archivo de audio adjunto\n';
+        if (portrait.names?.first) message += `💑 Nombres: ${portrait.names.first} y ${portrait.names.second}\n`;
+        if (portrait.anniversaryDate) message += `📅 Fecha: ${portrait.anniversaryDate}\n`;
+        if (portrait.dedication?.text) {
+          const dedicationLabel = portrait.dedication.type === 'grabada' ? 'Dedicatoria grabada' : 'Dedicatoria impresa';
+          message += `✍️ ${dedicationLabel}: ${portrait.dedication.text}\n`;
+        }
+        if (portrait.card?.from) message += `💌 De: ${portrait.card.from}\n`;
+        if (portrait.card?.to) message += `💌 Para: ${portrait.card.to}\n`;
+        if (portrait.includedBenefit?.label && portrait.includedBenefit.cost === 0) {
+          message += `🎁 Incluido sin costo adicional: ${portrait.includedBenefit.label}\n`;
+        }
+      }
+      const shipping = c.shipping;
+      if (shipping) {
+        message += '🚚 Datos de envío:\n';
+        if (shipping.fullName) message += `👤 Nombre y apellido: ${shipping.fullName}\n`;
+        if (shipping.address) message += `🏠 Dirección: ${shipping.address}\n`;
+        if (shipping.neighborhood) message += `📍 Barrio: ${shipping.neighborhood}\n`;
+        if (shipping.city) message += `🏙️ Ciudad: ${shipping.city}\n`;
+        if (shipping.phone) message += `📞 Teléfono: ${shipping.phone}\n`;
+        if (shipping.additionalDetails) message += `📝 Detalles adicionales: ${shipping.additionalDetails}\n`;
       }
       message += '\n';
     });
     
     const hasPriceOnRequest = items.some(item => !Number.isFinite(item.price));
-    message += hasPriceOnRequest
-      ? `💰 Subtotal de productos con precio: $${this.getTotal().toLocaleString('es-CO')}\n💬 Hay productos pendientes de cotización.\n`
-      : `💰 Total: $${this.getTotal().toLocaleString('es-CO')}\n`;
+    const baseAddonsTotal = this.getBaseAddonsTotal();
+    if (hasPriceOnRequest) {
+      if (baseAddonsTotal > 0) message += `💰 Complementos confirmados: $${baseAddonsTotal.toLocaleString('es-CO')}\n`;
+      message += '💬 El precio de una o más tallas está pendiente de cotización.\n';
+    } else {
+      message += `💰 Total: $${this.getTotal().toLocaleString('es-CO')}\n`;
+    }
     message += '¡Gracias! 🌸';
     
     return encodeURIComponent(message);

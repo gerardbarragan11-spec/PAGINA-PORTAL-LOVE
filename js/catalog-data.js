@@ -1,14 +1,47 @@
 window.PORTALOVERS_CATALOG = Object.freeze([
   Object.freeze({
-    id: 'acrilicos',
+    id: 'lunas-eventos',
+    category: 'lunas',
+    categoryName: 'Lunas',
+    title: 'Lunas Eventos',
+    featured: true,
+    contactOnly: true,
+    video: 'assets/images/LUNAS/LUNAS EVENTOS/En Portal Love nos sentimos orgullosos de haber sido parte del 6º Congreso de Medicina Interna, .mp4',
+    inquiryMessage: 'Hola, estoy interesado/a en cotizar un pedido de Lunas para un evento. Me gustaría recibir información sobre las opciones disponibles',
+    images: Object.freeze([])
+  }),
+  Object.freeze({
+    id: 'cristal-love-amigos',
     category: 'acrilicos',
-    categoryName: 'Acrílicos',
-    title: 'Acrílicos personalizados',
-    images: Object.freeze([
-      'assets/images/ACRILICOS/ACRI1.JPG',
-      'assets/images/ACRILICOS/ACRI2.JPG',
-      'assets/images/ACRILICOS/ACRI3.JPG'
-    ])
+    categoryName: 'Cristal Love',
+    title: 'Cristal Love – Amigos',
+    variantLabel: 'Amigos',
+    theme: 'Amistad',
+    photoLimit: 4,
+    isCristalLove: true,
+    images: Object.freeze(['assets/images/ACRILICOS/ACRI2.JPG'])
+  }),
+  Object.freeze({
+    id: 'cristal-love-amor-4',
+    category: 'acrilicos',
+    categoryName: 'Cristal Love',
+    title: 'Cristal Love – Amor',
+    variantLabel: 'Amor · 4 fotos',
+    theme: 'Amor',
+    photoLimit: 4,
+    isCristalLove: true,
+    images: Object.freeze(['assets/images/ACRILICOS/ACRI1.JPG'])
+  }),
+  Object.freeze({
+    id: 'cristal-love-amor-2',
+    category: 'acrilicos',
+    categoryName: 'Cristal Love',
+    title: 'Cristal Love – Amor',
+    variantLabel: 'Amor · 2 fotos',
+    theme: 'Amor',
+    photoLimit: 2,
+    isCristalLove: true,
+    images: Object.freeze(['assets/images/ACRILICOS/ACRI3.JPG'])
   }),
   Object.freeze({
     id: 'lunas-eco',
@@ -54,15 +87,49 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     ])
   }),
   Object.freeze({
-    id: 'portarretratos',
+    id: 'box-musical',
     category: 'portarretratos',
     categoryName: 'Portarretratos',
-    title: 'Portarretratos personalizados',
-    images: Object.freeze([
-      'assets/images/PORTARETRATOS/PORTA1.JPG',
-      'assets/images/PORTARETRATOS/PORTA2.JPG',
-      'assets/images/PORTARETRATOS/PORTA3.JPG'
-    ])
+    title: 'Box Musical',
+    photoLimit: 4,
+    photoCountLabel: 'Hasta 4 fotos',
+    portraitType: 'box-musical',
+    includedBenefit: Object.freeze({
+      label: 'Incluye 4 chocolates Ferrero Rocher',
+      item: '4 chocolates Ferrero Rocher',
+      cost: 0
+    }),
+    images: Object.freeze(['assets/images/PORTARETRATOS/PORTA1.JPG'])
+  }),
+  Object.freeze({
+    id: 'box-aniversario',
+    category: 'portarretratos',
+    categoryName: 'Portarretratos',
+    title: 'Box Aniversario',
+    photoLimit: 4,
+    photoCountLabel: 'Hasta 4 fotos',
+    portraitType: 'box-aniversario',
+    includedBenefit: Object.freeze({
+      label: 'Incluye 4 chocolates Ferrero Rocher',
+      item: '4 chocolates Ferrero Rocher',
+      cost: 0
+    }),
+    images: Object.freeze(['assets/images/PORTARETRATOS/PORTA2.JPG'])
+  }),
+  Object.freeze({
+    id: 'amore-mio',
+    category: 'portarretratos',
+    categoryName: 'Portarretratos',
+    title: 'Amore Mio',
+    photoLimit: 4,
+    photoCountLabel: 'Hasta 4 fotos',
+    portraitType: 'amore-mio',
+    includedBenefit: Object.freeze({
+      label: 'Incluye una vela de corazón tejido con aroma',
+      item: 'Vela de corazón tejido con aroma',
+      cost: 0
+    }),
+    images: Object.freeze(['assets/images/PORTARETRATOS/PORTA3.JPG'])
   }),
   Object.freeze({
     id: 'velas-baby',
@@ -98,6 +165,15 @@ window.PORTALOVERS_CLIENT_MEDIA = (() => {
     image('8.59.21 AM (1)')
   ].map(Object.freeze));
 })();
+
+window.PORTALOVERS_LUNA_PRICING = Object.freeze({
+  products: Object.freeze({
+    'lunas-love': Object.freeze({ esencial: null, plus: null, premium: null }),
+    'lunas-eco': Object.freeze({ esencial: null, plus: null, premium: null }),
+    'lunas-mascotas': Object.freeze({ esencial: null, plus: null, premium: null })
+  }),
+  baseAddonPrice: 15000
+});
 
 // Per-luna 3D model and design image; file names are exactly as on disk.
 window.PORTALOVERS_LUNA_ASSETS = (() => {

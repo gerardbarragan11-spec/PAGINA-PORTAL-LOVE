@@ -136,19 +136,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createCollectionCard(collection) {
     const card = document.createElement('article');
-    card.className = 'product-card collection-card reveal';
+    card.className = `product-card collection-card reveal${collection.featured ? ' collection-card--featured' : ''}`;
     card.id = collection.id;
     card.dataset.category = collection.category;
 
     const imageFrame = document.createElement('div');
     imageFrame.className = 'collection-image-frame';
-    const featuredImage = document.createElement('img');
-    featuredImage.className = 'collection-image';
-    featuredImage.src = collection.images[0];
-    featuredImage.alt = `${collection.title}, foto 1`;
-    featuredImage.loading = 'lazy';
-    featuredImage.decoding = 'async';
-    imageFrame.append(featuredImage);
+    let featuredImage = null;
+    if (collection.video) {
+      const featuredVideo = document.createElement('video');
+      featuredVideo.className = 'collection-video';
+      featuredVideo.src = collection.video;
+      featuredVideo.autoplay = true;
+      featuredVideo.muted = true;
+      featuredVideo.loop = true;
+      featuredVideo.playsInline = true;
+      featuredVideo.preload = 'metadata';
+      featuredVideo.setAttribute('aria-hidden', 'true');
+      imageFrame.append(featuredVideo);
+    } else {
+      featuredImage = document.createElement('img');
+      featuredImage.className = 'collection-image';
+      featuredImage.src = collection.images[0];
+      featuredImage.alt = `${collection.title}, foto 1`;
+      featuredImage.loading = 'lazy';
+      featuredImage.decoding = 'async';
+      imageFrame.append(featuredImage);
+    }
 
     const info = document.createElement('div');
     info.className = 'product-info collection-info';
@@ -160,7 +174,9 @@ document.addEventListener('DOMContentLoaded', () => {
     title.textContent = collection.title;
     const photoCount = document.createElement('span');
     photoCount.className = 'collection-photo-count';
-    photoCount.textContent = `${collection.images.length} fotos`;
+    photoCount.textContent = collection.photoCountLabel || (collection.photoLimit
+      ? `${collection.photoLimit} fotos requeridas`
+      : `${collection.images.length} fotos`);
 
     const thumbnails = document.createElement('div');
     thumbnails.className = 'collection-thumbnails';
@@ -185,16 +201,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const inquiry = document.createElement('a');
     inquiry.className = 'btn btn-primary btn-sm collection-inquiry';
-    inquiry.href = personalizationUrl(collection.id, collection.images[0]);
-    inquiry.textContent = 'Personalizar';
+    if (collection.contactOnly) {
+      inquiry.href = `https://wa.me/${Cart.WA_NUMBER}?text=${encodeURIComponent(collection.inquiryMessage)}`;
+      inquiry.target = '_blank';
+      inquiry.rel = 'noopener noreferrer';
+      inquiry.textContent = 'Cotiza tu evento con nosotros';
+    } else {
+      inquiry.href = personalizationUrl(collection.id, collection.images[0]);
+      inquiry.textContent = 'Personalizar';
+    }
 
-    info.append(category, title, photoCount, thumbnails, inquiry);
+    info.append(category, title);
+    if (!collection.contactOnly) info.append(photoCount);
+    if (collection.images.length > 1) info.append(thumbnails);
+    info.append(inquiry);
     card.append(imageFrame, info);
     return card;
   }
 
   if (catalogGrid) {
-    catalogCollections.forEach(collection => catalogGrid.append(createCollectionCard(collection)));
+    const orderedCollections = [...catalogCollections].sort((first, second) => Number(Boolean(second.featured)) - Number(Boolean(first.featured)));
+    orderedCollections.forEach(collection => catalogGrid.append(createCollectionCard(collection)));
   }
 
   const productShowcaseTrack = document.getElementById('showcaseTrack');
@@ -304,6 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!thumbnail) return;
       const card = thumbnail.closest('.collection-card');
       const featuredImage = card.querySelector('.collection-image');
+      if (!featuredImage) return;
       featuredImage.src = thumbnail.dataset.image;
       featuredImage.alt = `${card.querySelector('.product-title').textContent}, foto ${Number(thumbnail.dataset.index) + 1}`;
       card.querySelector('.collection-inquiry').href = personalizationUrl(card.id, thumbnail.dataset.image);
