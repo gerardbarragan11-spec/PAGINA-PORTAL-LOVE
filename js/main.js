@@ -240,6 +240,19 @@ document.addEventListener('DOMContentLoaded', () => {
     photoCount.textContent = collection.photoCountLabel || (collection.photoLimit
       ? `${collection.photoLimit} fotos requeridas`
       : `${collection.images.length} fotos`);
+    const price = document.createElement('span');
+    price.className = 'collection-price';
+    if (collection.category === 'lunas') {
+      const lunaPricing = window.PORTALOVERS_LUNA_PRICING;
+      const startingPrice = lunaPricing.products?.[collection.id]?.[lunaPricing.cardSize];
+      price.textContent = Number.isFinite(startingPrice)
+        ? `Desde ${window.PORTALOVERS_FORMAT_COP(startingPrice)}`
+        : 'Precio por cotizar';
+    } else {
+      price.textContent = Number.isFinite(collection.price)
+        ? window.PORTALOVERS_FORMAT_COP(collection.price)
+        : 'Precio por cotizar';
+    }
 
     const thumbnails = document.createElement('div');
     thumbnails.className = 'collection-thumbnails';
@@ -275,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     info.append(category, title);
-    if (!collection.contactOnly) info.append(photoCount);
+    if (!collection.contactOnly) info.append(price, photoCount);
     if (collection.images.length > 1) info.append(thumbnails);
     info.append(inquiry);
     card.append(imageFrame, info);

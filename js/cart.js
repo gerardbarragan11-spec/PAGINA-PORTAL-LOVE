@@ -15,13 +15,24 @@ const Cart = {
           && (Number.isFinite(item.price) || item.priceOnRequest === true)
           && Number.isInteger(item.quantity)
           && item.quantity > 0)
-        .map(item => ({
-          ...item,
-          price: Number.isFinite(item.price) ? item.price : null,
-          customization: item.customization && typeof item.customization === 'object'
+        .map(item => {
+          const customization = item.customization && typeof item.customization === 'object'
             ? item.customization
-            : {}
-        }));
+            : {};
+          const collection = (window.PORTALOVERS_CATALOG || []).find(product => product.id === item.id);
+          const configuredPrice = customization.luna
+            ? window.PORTALOVERS_LUNA_PRICING?.products?.[item.id]?.[customization.luna.size]
+            : collection?.price;
+          const price = Number.isFinite(configuredPrice)
+            ? configuredPrice
+            : Number.isFinite(item.price) ? item.price : null;
+          return {
+            ...item,
+            price,
+            priceOnRequest: !Number.isFinite(price) && item.priceOnRequest === true,
+            customization
+          };
+        });
     } catch (e) {
       return [];
     }
@@ -296,7 +307,7 @@ const Cart = {
             <div class="cart-item-details">
               <div class="cart-item-name">${this.escapeHTML(item.name)}</div>
               <div class="cart-item-custom">${customHTML}</div>
-              <div class="cart-item-price">${Number.isFinite(item.price) ? '$' + item.price.toLocaleString('es-CO') : 'Precio por cotizar'}</div>
+              <div class="cart-item-price">${Number.isFinite(item.price) ? window.PORTALOVERS_FORMAT_COP(item.price) : 'Precio por cotizar'}</div>
             </div>
             <div class="cart-item-actions">
               <button class="cart-item-remove" type="button" data-index="${index}" aria-label="Eliminar ${this.escapeHTML(item.name)} del carrito">&times;</button>
@@ -313,12 +324,12 @@ const Cart = {
     }
 
     const hasPriceOnRequest = items.some(item => !Number.isFinite(item.price));
-    const baseAddonsTotal = this.getBaseAddonsTotal();
+    const confirmedTotal = this.getTotal();
     cartTotal.textContent = hasPriceOnRequest
-      ? baseAddonsTotal > 0
-        ? `Por cotizar + $${baseAddonsTotal.toLocaleString('es-CO')} en bases`
-        : 'Por cotizar'
-      : '$' + this.getTotal().toLocaleString('es-CO');
+      ? confirmedTotal > 0
+        ? `${window.PORTALOVERS_FORMAT_COP(confirmedTotal)} confirmados + productos por cotizar`
+        : 'Precio por cotizar'
+      : window.PORTALOVERS_FORMAT_COP(confirmedTotal);
   },
 
   openSidebar() {
@@ -360,7 +371,7 @@ const Cart = {
     items.forEach((item, i) => {
       message += `📦 Producto ${i + 1}: ${item.name}\n`;
         message += Number.isFinite(item.price)
-          ? `💰 Precio: $${item.price.toLocaleString('es-CO')}\n`
+          ? `💰 Precio: ${window.PORTALOVERS_FORMAT_COP(item.price)}\n`
           : '💰 Precio: por cotizar\n';
       message += `🔢 Cantidad: ${item.quantity}\n`;
       
@@ -457,12 +468,12 @@ const Cart = {
     });
     
     const hasPriceOnRequest = items.some(item => !Number.isFinite(item.price));
-    const baseAddonsTotal = this.getBaseAddonsTotal();
     if (hasPriceOnRequest) {
-      if (baseAddonsTotal > 0) message += `💰 Complementos confirmados: $${baseAddonsTotal.toLocaleString('es-CO')}\n`;
+      const confirmedTotal = this.getTotal();
+      if (confirmedTotal > 0) message += `💰 Subtotal confirmado: ${window.PORTALOVERS_FORMAT_COP(confirmedTotal)}\n`;
       message += '💬 El precio de una o más tallas está pendiente de cotización.\n';
     } else {
-      message += `💰 Total: $${this.getTotal().toLocaleString('es-CO')}\n`;
+      message += `💰 Total: ${window.PORTALOVERS_FORMAT_COP(this.getTotal())}\n`;
     }
     message += '¡Gracias! 🌸';
     

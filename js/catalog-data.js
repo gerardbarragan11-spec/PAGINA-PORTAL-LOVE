@@ -15,6 +15,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     category: 'acrilicos',
     categoryName: 'Cristal Love',
     title: 'Cristal Love – Amigos',
+    price: 45500,
     variantLabel: 'Amigos',
     theme: 'Amistad',
     photoLimit: 4,
@@ -26,6 +27,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     category: 'acrilicos',
     categoryName: 'Cristal Love',
     title: 'Cristal Love – Amor',
+    price: 59900,
     variantLabel: 'Amor · 4 fotos',
     theme: 'Amor',
     photoLimit: 4,
@@ -42,6 +44,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     category: 'acrilicos',
     categoryName: 'Cristal Love',
     title: 'Cristal Love – Amor',
+    price: 59900,
     variantLabel: 'Amor · 2 fotos',
     theme: 'Amor',
     photoLimit: 2,
@@ -102,6 +105,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     category: 'portarretratos',
     categoryName: 'Portarretratos',
     title: 'Box Musical',
+    price: 79900,
     photoLimit: 4,
     photoCountLabel: 'Hasta 4 fotos',
     portraitType: 'box-musical',
@@ -125,6 +129,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     category: 'portarretratos',
     categoryName: 'Portarretratos',
     title: 'Box Aniversario',
+    price: 79900,
     photoLimit: 4,
     photoCountLabel: 'Hasta 4 fotos',
     portraitType: 'box-aniversario',
@@ -151,6 +156,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     category: 'portarretratos',
     categoryName: 'Portarretratos',
     title: 'Amore Mio',
+    price: 79900,
     photoLimit: 4,
     photoCountLabel: 'Hasta 4 fotos',
     portraitType: 'amore-mio',
@@ -174,14 +180,14 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     category: 'velas',
     categoryName: 'Velas Baby',
     title: 'Velas Baby',
+    contactOnly: true,
+    inquiryMessage: 'Hola, estoy interesado/a en cotizar Velas Baby para mi evento. Me gustaría recibir información sobre las opciones disponibles',
     images: Object.freeze([
       'assets/images/VELAS/VELASBABY.JPG',
-      'assets/images/VELAS/VELASBABY2.JPG',
-      'assets/images/VELAS/VELASBABY3.JPG',
+      'assets/images/VELAS/WhatsApp Image 2026-11-13 at 4.25.12 PM.jpeg',
+      'assets/images/VELAS/WhatsApp Image 2026-11-13 at 4.25.13 PM.jpeg',
       'assets/images/VELAS/VELASBABY4.JPG',
-      'assets/images/VELAS/VELASBABY5.JPG',
-      'assets/images/VELAS/VELASBABY6.JPG',
-      'assets/images/VELAS/VELASBABY7.JPG'
+      'assets/images/VELAS/VELASBABY6.JPG'
     ])
   })
 ]);
@@ -204,14 +210,19 @@ window.PORTALOVERS_CLIENT_MEDIA = (() => {
   ].map(Object.freeze));
 })();
 
-window.PORTALOVERS_LUNA_PRICING = Object.freeze({
-  products: Object.freeze({
-    'lunas-love': Object.freeze({ esencial: null, plus: null, premium: null }),
-    'lunas-eco': Object.freeze({ esencial: null, plus: null, premium: null }),
-    'lunas-mascotas': Object.freeze({ esencial: null, plus: null, premium: null })
-  }),
-  baseAddonPrice: 15000
-});
+window.PORTALOVERS_LUNA_PRICING = (() => {
+  const sizePrices = Object.freeze({ esencial: 79900, plus: 119900, premium: 129900 });
+  return Object.freeze({
+    products: Object.freeze({
+      'lunas-love': sizePrices,
+      'lunas-eco': sizePrices,
+      'lunas-mascotas': sizePrices
+    }),
+    cardSize: 'esencial',
+    baseAddonPrice: 15000
+  });
+})();
+window.PORTALOVERS_FORMAT_COP = value => `$${value.toLocaleString('es-CO')} COP`;
 
 // Per-luna 3D model and design image; file names are exactly as on disk.
 window.PORTALOVERS_LUNA_ASSETS = (() => {

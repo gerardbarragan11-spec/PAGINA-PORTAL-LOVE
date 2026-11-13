@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (collection.contactOnly) return;
     products[collection.id] = {
       name: collection.title,
-      price: null,
-      priceOnRequest: true,
+      price: Number.isFinite(collection.price) ? collection.price : null,
+      priceOnRequest: !Number.isFinite(collection.price),
       image: collection.images[0],
       images: collection.images,
       category: collection.categoryName,
@@ -207,9 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.getElementById('previewName').textContent = product.name;
-  document.getElementById('previewPrice').textContent = product.priceOnRequest
-    ? 'Precio por cotizar'
-    : '$' + product.price.toLocaleString('es-CO');
+  document.getElementById('previewPrice').textContent = product.isLuna
+    ? 'Elige una talla para ver el precio'
+    : Number.isFinite(product.price)
+      ? window.PORTALOVERS_FORMAT_COP(product.price)
+      : 'Precio por cotizar';
   const productSetIncludes = document.getElementById('productSetIncludes');
   const productSetIncludesTitle = document.getElementById('productSetIncludesTitle');
   const productSetIncludesList = document.getElementById('productSetIncludesList');
@@ -483,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-luna-size]').forEach(button => {
       const sizePrice = lunaPricing.products[product.id][button.dataset.lunaSize];
       button.querySelector('.luna-size-price').textContent = Number.isFinite(sizePrice)
-        ? `$${sizePrice.toLocaleString('es-CO')}`
+        ? window.PORTALOVERS_FORMAT_COP(sizePrice)
         : 'Precio por cotizar';
     });
   }
@@ -1060,12 +1062,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const baseExtra = selectedLunaSize === 'esencial' && lunaBaseAddonToggle.checked
       ? lunaPricing.baseAddonPrice
       : 0;
-    const productPriceText = Number.isFinite(productPrice)
-      ? `$${productPrice.toLocaleString('es-CO')}`
-      : 'Precio por cotizar';
-    document.getElementById('previewPrice').textContent = baseExtra
-      ? `${productPriceText} + $${baseExtra.toLocaleString('es-CO')} COP por la base`
-      : productPriceText;
+    const previewPrice = document.getElementById('previewPrice');
+    if (!Number.isFinite(productPrice)) {
+      previewPrice.textContent = 'Elige una talla para ver el precio';
+      return;
+    }
+    previewPrice.textContent = baseExtra
+      ? `${window.PORTALOVERS_FORMAT_COP(productPrice + baseExtra)} (incluye ${window.PORTALOVERS_FORMAT_COP(baseExtra)} por la base)`
+      : window.PORTALOVERS_FORMAT_COP(productPrice);
   }
 
   function getLunaValidationError() {
@@ -1441,6 +1445,10 @@ document.addEventListener('DOMContentLoaded', () => {
         quantity: quantity,
         customization
       };
+      const baseAddon = customization.luna?.base?.addonPrice || 0;
+      const orderItemTotal = Number.isFinite(item.price)
+        ? (item.price + baseAddon) * item.quantity
+        : null;
 
       if (!Cart.addItem(item)) {
         throw new Error('No se pudo guardar el producto. Revisa el espacio disponible en el navegador.');
@@ -1448,7 +1456,9 @@ document.addEventListener('DOMContentLoaded', () => {
       itemAdded = true;
       addToCartBtn.classList.add('added');
       addToCartBtn.textContent = '✓ Agregado al Carrito';
-      orderFeedback.textContent = 'Producto y referencias guardados. Los enlaces se incluirán en el pedido de WhatsApp.';
+      orderFeedback.textContent = Number.isFinite(orderItemTotal)
+        ? `Producto agregado. Total de este producto: ${window.PORTALOVERS_FORMAT_COP(orderItemTotal)}. Los enlaces se incluirán en el pedido de WhatsApp.`
+        : 'Producto y referencias guardados. Los enlaces se incluirán en el pedido de WhatsApp.';
       setTimeout(() => Cart.openSidebar(), 500);
       setTimeout(() => {
         addToCartBtn.classList.remove('added');

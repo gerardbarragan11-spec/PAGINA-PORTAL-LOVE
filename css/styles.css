@@ -766,6 +766,7 @@ button {
 .collection-card:hover .collection-image { transform: scale(1.025); }
 .collection-card:hover .collection-video { transform: scale(1.025); }
 .collection-info { display: flex; flex: 1; flex-direction: column; align-items: flex-start; }
+.collection-price { margin: 0 0 0.45rem; color: var(--dark); font-size: var(--text-sm); font-weight: 700; }
 .collection-photo-count { margin: -0.15rem 0 0.9rem; color: var(--muted); font-size: var(--text-xs); }
 .collection-thumbnails {
   display: flex;
