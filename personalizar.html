@@ -73,6 +73,13 @@
               <h2 class="preview-name" id="previewName">Producto</h2>
               <div class="preview-price" id="previewPrice">$0</div>
             </div>
+            <section class="product-set-includes" id="productSetIncludes" aria-labelledby="productSetIncludesTitle" aria-live="polite" hidden>
+              <div class="product-set-includes-heading">
+                <span class="product-set-includes-mark" aria-hidden="true">✓</span>
+                <h3 id="productSetIncludesTitle">Nuestro set incluye</h3>
+              </div>
+              <ul class="product-set-includes-grid" id="productSetIncludesList"></ul>
+            </section>
           </div>
         </div>
 
@@ -84,7 +91,7 @@
           <section class="luna-customization" id="lunaCustomization" aria-label="Personalización de Luna" hidden>
             <section class="luna-size-selector" aria-labelledby="lunaSizeTitle">
               <div class="luna-step-heading">
-                <div><h3 id="lunaSizeTitle">Elige tu talla</h3><p>Selecciona una talla para continuar.</p></div>
+                <div><h3 id="lunaSizeTitle">Elige una opción</h3><p>Selecciona una talla para continuar.</p></div>
               </div>
               <div class="luna-size-options" role="group" aria-label="Tallas disponibles">
                 <button class="luna-size-card" type="button" data-luna-size="esencial" aria-pressed="false"><strong>Esencial</strong><span class="luna-size-price">Precio por cotizar</span></button>
@@ -101,7 +108,7 @@
               </div>
 
               <section class="luna-step" id="lunaPhotoStep" aria-labelledby="lunaPhotoTitle">
-                <div class="luna-step-heading"><span class="step-number">1</span><div><h3 id="lunaPhotoTitle">Tu foto favorita</h3><p id="lunaPhotoRequirement"></p></div></div>
+                <div class="luna-step-heading"><span class="step-number">1</span><div><h3 id="lunaPhotoTitle">Elige tu foto</h3><p id="lunaPhotoRequirement"></p></div></div>
                 <div class="cristal-photo-grid luna-photo-grid" id="lunaPhotoGrid"></div>
                 <p class="step-hint" id="lunaPhotoFeedback" role="status" aria-live="polite"></p>
               </section>
@@ -142,6 +149,10 @@
           </section>
 
           <section class="cristal-customization" id="cristalCustomization" aria-label="Personalización de Cristal Love" hidden>
+            <div class="portrait-included-benefit" id="cristalIncludedBenefit" role="note" hidden>
+              <span class="portrait-included-mark" aria-hidden="true">✓</span>
+              <span id="cristalIncludedBenefitText"></span>
+            </div>
             <section class="cristal-step" aria-labelledby="cristalPhotosTitle">
               <div class="cristal-step-heading">
                 <span class="step-number">1</span>
@@ -187,7 +198,7 @@
                 <div><h3 id="cristalComplementTitle">Elige una opción para complementar tu regalo (sin costo adicional)</h3><p>Selecciona una alternativa.</p></div>
               </div>
               <div class="cristal-choice-grid cristal-complement-choices" role="group" aria-label="Complementos sin costo adicional">
-                <button class="cristal-choice-card" type="button" data-choice-group="cristal-complement" data-value="vela" aria-pressed="false"><strong>Vela de corazón tejido</strong><span>Sin costo adicional</span></button>
+                <button class="cristal-choice-card" id="cristalVelaComplement" type="button" data-choice-group="cristal-complement" data-value="vela" aria-pressed="false"><strong>Vela de corazón tejido</strong><span>Sin costo adicional</span></button>
                 <button class="cristal-choice-card" type="button" data-choice-group="cristal-complement" data-value="frase-love" aria-pressed="false"><strong>Frase Love</strong><span>Sin costo adicional</span></button>
               </div>
               <div class="cristal-love-options" id="cristalLoveOptions" hidden>
@@ -234,11 +245,11 @@
             <section class="portrait-step" id="portraitAnniversaryStep" aria-labelledby="portraitAnniversaryTitle" hidden>
               <div class="cristal-step-heading">
                 <span class="step-number">3</span>
-                <div><h3 id="portraitAnniversaryTitle">Datos del aniversario</h3><p>Completa los nombres y la fecha.</p></div>
+                <div><h3 id="portraitAnniversaryTitle">Datos del aniversario</h3><p>Nombre tuyo y el de tu pareja.</p></div>
               </div>
               <div class="luna-card-fields portrait-name-fields">
-                <label for="portraitNameOne">Nombre 1<input class="song-input portrait-text-input" id="portraitNameOne" type="text" autocomplete="name"></label>
-                <label for="portraitNameTwo">Nombre 2<input class="song-input portrait-text-input" id="portraitNameTwo" type="text"></label>
+                <label for="portraitNameOne">Tu nombre<input class="song-input portrait-text-input" id="portraitNameOne" type="text" autocomplete="name"></label>
+                <label for="portraitNameTwo">Nombre de tu pareja<input class="song-input portrait-text-input" id="portraitNameTwo" type="text"></label>
               </div>
               <fieldset class="portrait-date-fields">
                 <legend>Fecha (Día / Mes / Año)</legend>
@@ -273,15 +284,14 @@
               <div class="phrase-counter" id="portraitDedicationCounter" hidden><span id="portraitDedicationCount">0</span>/80</div>
             </section>
 
-            <section class="portrait-step" id="portraitSendToStep" aria-labelledby="portraitSendToTitle" hidden>
+            <section class="portrait-step" id="portraitCardStep" aria-labelledby="portraitCardTitle" hidden>
               <div class="cristal-step-heading">
-                <span class="step-number">5</span>
-                <div><h3 id="portraitSendToTitle">Tarjeta impresa</h3><p>Completa los datos de entrega.</p></div>
+                <span class="step-number" id="portraitCardNumber">4</span>
+                <div><h3 id="portraitCardTitle">Tarjeta personalizada impresa</h3><p>Máximo 80 caracteres.</p></div>
               </div>
-              <div class="luna-card-fields">
-                <label for="portraitFrom">De:<input class="song-input portrait-text-input" id="portraitFrom" type="text"></label>
-                <label for="portraitTo">Para:<input class="song-input portrait-text-input" id="portraitTo" type="text"></label>
-              </div>
+              <label for="portraitCardMessage">Escribe un mensaje para tu tarjeta impresa</label>
+              <textarea class="phrase-input cristal-textarea portrait-card-message" id="portraitCardMessage" maxlength="80" aria-describedby="portraitCardMessageCounter" placeholder="Escribe tu mensaje" required></textarea>
+              <div class="phrase-counter" id="portraitCardMessageCounter"><span id="portraitCardMessageCount">0</span>/80</div>
             </section>
           </section>
 
@@ -413,7 +423,7 @@
 
       <section class="luna-showcase" id="lunaShowcase" aria-labelledby="lunaShowcaseTitle" hidden>
         <h2 id="lunaShowcaseTitle">Así convertimos un diseño en una Lámpara Luna</h2>
-        <p class="luna-showcase-intro">Este modelo es un ejemplo de referencia. La imagen de tu pedido se utiliza para personalizar tu propia Luna y no modifica esta demostración.</p>
+        <p class="luna-showcase-intro">Así transformamos un diseño 3D en una Moon Love</p>
         <figure class="luna-model-figure">
           <model-viewer id="lunaModel" alt="Ejemplo de Lámpara Luna personalizada" camera-controls touch-action="pan-y" interaction-prompt="auto" loading="lazy" exposure="0.7" hidden></model-viewer>
           <div class="luna-stl-viewer" id="lunaStlViewer" hidden></div>

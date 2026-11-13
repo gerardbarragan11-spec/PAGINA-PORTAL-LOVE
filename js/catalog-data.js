@@ -30,6 +30,11 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     theme: 'Amor',
     photoLimit: 4,
     isCristalLove: true,
+    includedBenefit: Object.freeze({
+      label: 'Incluye una vela de corazón tejido con aroma sin costo adicional',
+      item: 'Vela de corazón tejido con aroma',
+      cost: 0
+    }),
     images: Object.freeze(['assets/images/ACRILICOS/ACRI1.JPG'])
   }),
   Object.freeze({
@@ -41,11 +46,17 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     theme: 'Amor',
     photoLimit: 2,
     isCristalLove: true,
-    images: Object.freeze(['assets/images/ACRILICOS/ACRI3.JPG'])
+    includedBenefit: Object.freeze({
+      label: 'Incluye una vela de corazón tejido con aroma sin costo adicional',
+      item: 'Vela de corazón tejido con aroma',
+      cost: 0
+    }),
+    images: Object.freeze(['assets/images/ACRILICOS/ACRI3.jpg'])
   }),
   Object.freeze({
     id: 'lunas-eco',
     category: 'lunas',
+    lunaType: 'eco',
     categoryName: 'Lunas',
     title: 'Lunas Eco',
     images: Object.freeze([
@@ -60,12 +71,12 @@ window.PORTALOVERS_CATALOG = Object.freeze([
   Object.freeze({
     id: 'lunas-love',
     category: 'lunas',
+    lunaType: 'love',
     categoryName: 'Lunas',
     title: 'Lunas Love',
     images: Object.freeze([
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE.JPG',
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE2.JPG',
-      'assets/images/LUNAS/LUNAS LOVE/LUNALOVE3.JPG',
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE4.JPG',
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE5.JPG',
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE6.JPG'
@@ -74,16 +85,16 @@ window.PORTALOVERS_CATALOG = Object.freeze([
   Object.freeze({
     id: 'lunas-mascotas',
     category: 'lunas',
+    lunaType: 'mascotas',
     categoryName: 'Lunas',
     title: 'Lunas Mascotas',
     images: Object.freeze([
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM.jpg',
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM1.jpg',
-      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM2.jpg',
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM3.jpg',
-      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM4.jpg',
+      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM4.jpeg',
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM5.jpg',
-      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM6.jpg'
+      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM6.jpeg'
     ])
   }),
   Object.freeze({
@@ -99,6 +110,14 @@ window.PORTALOVERS_CATALOG = Object.freeze([
       item: '4 chocolates Ferrero Rocher',
       cost: 0
     }),
+    setIncludes: Object.freeze([
+      'Portarretrato 19,5 cm x 14,5 cm (con protector de vidrio).',
+      '4 fotografías.',
+      'Canción a dedicar mediante QR desde Spotify.',
+      '4 chocolates Ferrero Rocher.',
+      'Tarjeta personalizada.',
+      'Caja de regalo.'
+    ]),
     images: Object.freeze(['assets/images/PORTARETRATOS/PORTA1.JPG'])
   }),
   Object.freeze({
@@ -114,6 +133,17 @@ window.PORTALOVERS_CATALOG = Object.freeze([
       item: '4 chocolates Ferrero Rocher',
       cost: 0
     }),
+    setIncludes: Object.freeze([
+      'Portarretrato 19,5 cm x 14,5 cm (con protector de vidrio).',
+      '4 fotografías.',
+      '4 chocolates Ferrero Rocher.',
+      'Nombre tuyo y el de tu pareja.',
+      'Canción a dedicar mediante QR desde Spotify.',
+      'Calendario con fecha de aniversario.',
+      'Frase corta en el portarretrato.',
+      'Tarjeta personalizada impresa.',
+      'Caja de regalo.'
+    ]),
     images: Object.freeze(['assets/images/PORTARETRATOS/PORTA2.JPG'])
   }),
   Object.freeze({
@@ -129,6 +159,14 @@ window.PORTALOVERS_CATALOG = Object.freeze([
       item: 'Vela de corazón tejido con aroma',
       cost: 0
     }),
+    setIncludes: Object.freeze([
+      'Portarretrato 19,5 cm x 14,5 cm (con protector de vidrio).',
+      '4 fotografías.',
+      'Canción a dedicar mediante QR desde Spotify.',
+      'Vela de corazón tejido con aroma.',
+      'Tarjeta personalizada impresa.',
+      'Caja de regalo.'
+    ]),
     images: Object.freeze(['assets/images/PORTARETRATOS/PORTA3.JPG'])
   }),
   Object.freeze({

@@ -24,9 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
       categoryKey: collection.category,
       isLuna: collection.category === 'lunas',
       isCristalLove: collection.isCristalLove === true,
+      lunaType: collection.lunaType || '',
       portraitType: collection.portraitType || '',
       isPortrait: Boolean(collection.portraitType),
       includedBenefit: collection.includedBenefit || null,
+      setIncludes: collection.setIncludes || [],
       variantLabel: collection.variantLabel || '',
       theme: collection.theme || '',
       photoLimit: Number.isInteger(collection.photoLimit) ? collection.photoLimit : 0
@@ -105,6 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('cristal-love-page');
     document.getElementById('cristalCustomization').hidden = false;
     document.getElementById('cristalPhotoRequirement').textContent = `Carga exactamente ${product.photoLimit} fotografías para esta variante.`;
+    const hasIncludedCandle = product.includedBenefit?.item === 'Vela de corazón tejido con aroma';
+    const cristalIncludedBenefit = document.getElementById('cristalIncludedBenefit');
+    cristalIncludedBenefit.hidden = !hasIncludedCandle;
+    document.getElementById('cristalVelaComplement').hidden = hasIncludedCandle;
+    if (hasIncludedCandle) {
+      document.getElementById('cristalIncludedBenefitText').textContent = product.includedBenefit.label;
+    }
     const quantityStep = document.getElementById('quantityStep');
     document.querySelectorAll('.customize-step').forEach(step => {
       step.hidden = step !== quantityStep;
@@ -118,13 +127,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const portraitSongStep = document.getElementById('portraitSongStep');
     const portraitAnniversaryStep = document.getElementById('portraitAnniversaryStep');
     const portraitAmoreStep = document.getElementById('portraitAmoreStep');
-    const portraitSendToStep = document.getElementById('portraitSendToStep');
+    const portraitCardStep = document.getElementById('portraitCardStep');
+    const portraitCardMessage = document.getElementById('portraitCardMessage');
+    const portraitCardMessageCount = document.getElementById('portraitCardMessageCount');
     portraitCustomization.hidden = false;
     document.querySelectorAll('.customize-step').forEach(step => { step.hidden = step !== quantityStep; });
     portraitSongStep.hidden = product.portraitType === 'amore-mio';
     portraitAnniversaryStep.hidden = product.portraitType !== 'box-aniversario';
     portraitAmoreStep.hidden = product.portraitType !== 'amore-mio';
-    portraitSendToStep.hidden = product.portraitType !== 'box-aniversario';
+    portraitCardStep.hidden = false;
+    document.getElementById('portraitCardNumber').textContent = product.portraitType === 'box-aniversario' ? '5' : '4';
+    portraitCardMessage.addEventListener('input', () => {
+      portraitCardMessageCount.textContent = portraitCardMessage.value.length;
+    });
     document.getElementById('portraitDedicationTitle').textContent = product.portraitType === 'box-aniversario'
       ? 'Dedicatoria grabada'
       : 'Dedicatoria impresa';
@@ -137,7 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('portraitDedicationCounter').hidden = false;
     }
     const benefit = document.getElementById('portraitIncludedBenefit');
-    if (product.includedBenefit) {
+    const benefitIsListed = product.includedBenefit?.item
+      && product.setIncludes.some(item => item.includes(product.includedBenefit.item));
+    if (product.includedBenefit && !benefitIsListed) {
       document.getElementById('portraitIncludedBenefitText').textContent = `${product.includedBenefit.label} · Sin costo adicional.`;
       benefit.hidden = false;
     }
@@ -193,6 +210,130 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('previewPrice').textContent = product.priceOnRequest
     ? 'Precio por cotizar'
     : '$' + product.price.toLocaleString('es-CO');
+  const productSetIncludes = document.getElementById('productSetIncludes');
+  const productSetIncludesTitle = document.getElementById('productSetIncludesTitle');
+  const productSetIncludesList = document.getElementById('productSetIncludesList');
+  const includedSetIconPaths = {
+    photo: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>',
+    qr: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v7M14 20h3"/>',
+    song: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+    dedication: '<path d="m13 6 5-5 5 5-12 12-5 1z"/><path d="m13 6 5 5M4 20h5"/>',
+    base: '<path d="M4 18h16M6 18l2-8h8l2 8M10 10V6h4v4"/>',
+    card: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h7"/>',
+    gift: '<path d="M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H8.5a2.5 2.5 0 1 1 2.5-2.5V7ZM12 7h3.5a2.5 2.5 0 1 0-2.5-2.5V7Z"/>',
+    candle: '<rect x="7" y="11" width="10" height="10" rx="1"/><path d="M12 3c2 2 2 4 0 6-2-2-2-4 0-6ZM12 11V9"/>',
+    message: '<path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.5L3 21l1.8-5.3A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8 11h8M8 14h5"/>',
+    color: '<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/>',
+    frame: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5-10 11"/>',
+    names: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20v-1a6 6 0 0 1 12 0v1M15 16a5 5 0 0 1 6 4"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h2M14 14h2M8 17h2"/>',
+    detail: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>'
+  };
+
+  function getIncludedSetIcon(item) {
+    const text = item.toLowerCase();
+    if (text.includes('fotograf')) return 'photo';
+    if (text.includes('código qr') || text.includes('canción dedicada')) return 'qr';
+    if (text.includes('canción') || text.includes('spotify')) return 'song';
+    if (text.includes('vela')) return 'candle';
+    if (text.includes('base')) return 'base';
+    if (text.includes('portarretrato')) return 'frame';
+    if (text.includes('nombre')) return 'names';
+    if (text.includes('calendario')) return 'calendar';
+    if (text.includes('chocolate') || text.includes('caja')) return 'gift';
+    if (text.includes('color')) return 'color';
+    if (text.includes('dedicatoria') || text.includes('tarjeta') || text.includes('frase') || text.includes('mensaje')) return 'card';
+    return 'detail';
+  }
+
+  function renderProductSet(title, items, animate = false) {
+    productSetIncludesTitle.textContent = title;
+    productSetIncludesList.replaceChildren();
+    items.forEach((item, index) => {
+      const text = typeof item === 'string' ? item : item.text;
+      const kind = typeof item === 'string' ? getIncludedSetIcon(item) : item.kind;
+      const listItem = document.createElement('li');
+      listItem.className = `product-set-includes-item${index === 0 ? ' product-set-includes-item--featured' : ''}`;
+
+      const icon = document.createElement('span');
+      icon.className = 'product-set-includes-icon';
+      icon.setAttribute('aria-hidden', 'true');
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('stroke', 'currentColor');
+      svg.setAttribute('stroke-width', '1.6');
+      svg.setAttribute('stroke-linecap', 'round');
+      svg.setAttribute('stroke-linejoin', 'round');
+      svg.innerHTML = includedSetIconPaths[kind] || includedSetIconPaths.detail;
+      icon.append(svg);
+
+      const label = document.createElement('span');
+      label.className = 'product-set-includes-text';
+      label.textContent = text;
+      listItem.append(icon, label);
+      productSetIncludesList.append(listItem);
+    });
+    productSetIncludes.hidden = items.length === 0;
+    productSetIncludes.classList.remove('is-refreshing');
+    if (animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      void productSetIncludes.offsetWidth;
+      productSetIncludes.classList.add('is-refreshing');
+    }
+  }
+
+  function getCristalLoveSet() {
+    const isAmigos = product.theme === 'Amistad';
+    return {
+      title: `Nuestro Cristal Love ${isAmigos ? 'Amigos' : 'Amor'} incluye`,
+      items: [
+        { kind: 'photo', text: `${product.photoLimit} fotografías personalizadas.` },
+        { kind: 'message', text: 'Elección de un mensaje predeterminado.' },
+        { kind: 'card', text: 'Dedicatoria para la tarjeta impresa (máximo 150 caracteres).' },
+        { kind: 'color', text: 'Base en el color seleccionado.' },
+        isAmigos
+          ? { kind: 'candle', text: 'Opción de agregar una vela de corazón tejido con aroma sin costo adicional.' }
+          : { kind: 'candle', text: 'Vela de corazón tejido con aroma incluida sin costo adicional.' },
+        { kind: 'detail', text: 'Opción de personalizar una Frase Love.' },
+        { kind: 'gift', text: 'Caja especial de regalo.' }
+      ]
+    };
+  }
+
+  function getLunaSet(size) {
+    const sizeLabel = size[0].toUpperCase() + size.slice(1);
+    const isEssential = size === 'esencial';
+    const photoCount = size === 'premium' ? 2 : 1;
+    const qrText = product.lunaType === 'eco'
+      ? 'Código QR con audio o latido del corazón de tu bebé, o enlace de una canción.'
+      : 'Canción dedicada mediante código QR.';
+    const items = [
+      { kind: 'photo', text: `${photoCount} ${photoCount === 1 ? 'fotografía personalizada.' : 'fotografías personalizadas.'}` }
+    ];
+    if (!isEssential) items.push({ kind: 'qr', text: qrText });
+    items.push({ kind: 'dedication', text: 'Dedicatoria grabada en la lámpara.' });
+    items.push(isEssential
+      ? { kind: 'base', text: 'Opción de agregar base personalizada por $15.000 COP.' }
+      : { kind: 'base', text: 'Base personalizada.' });
+    items.push({ kind: 'card', text: 'Tarjeta impresa personalizada.' });
+    items.push({ kind: 'gift', text: 'Caja especial de regalo.' });
+    return { title: `Nuestra Luna ${sizeLabel} incluye`, items };
+  }
+
+  if (product.isPortrait) {
+    renderProductSet('Nuestro set incluye', product.setIncludes);
+  } else if (product.isCristalLove) {
+    const includedSet = getCristalLoveSet();
+    renderProductSet(includedSet.title, includedSet.items);
+  }
+  if (product.isLuna) {
+    document.querySelectorAll('[data-luna-size]').forEach(button => {
+      button.addEventListener('click', () => {
+        const includedSet = getLunaSet(button.dataset.lunaSize);
+        renderProductSet(includedSet.title, includedSet.items, true);
+      });
+    });
+  }
   document.getElementById('uploadExampleNote').hidden = product.id !== 'lamp_3' && !product.isLuna;
   if (product.id === 'lamp_3' || product.isLuna) {
     document.body.classList.add('luna-product-page');
@@ -824,6 +965,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const photoLimit = size === 'premium' ? 2 : 1;
     renderPhotoSlots(lunaPhotoGrid, lunaPhotoFiles, lunaPhotoPreviewUrls, lunaPhotoFeedback, photoLimit, updateLunaProgress);
     document.getElementById('lunaPhotoRequirement').textContent = `Carga ${photoLimit === 1 ? '1 fotografía' : 'las 2 fotografías'} para continuar.`;
+    document.getElementById('lunaPhotoTitle').textContent = size === 'premium' ? 'Elige tus fotos' : 'Elige tu foto';
     lunaFlow.hidden = false;
     animatePreviewEntry(lunaFlow);
     document.getElementById('quantityStep').hidden = false;
@@ -1051,6 +1193,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (portraitPhotoFiles.filter(Boolean).length === 0) return 'Agrega al menos una fotografía para continuar.';
     const dedication = document.getElementById('portraitDedication').value.trim();
     if (!dedication) return 'Escribe la dedicatoria para continuar.';
+    const cardMessage = document.getElementById('portraitCardMessage').value.trim();
+    if (!cardMessage) return 'Escribe un mensaje para tu tarjeta impresa.';
+    if (cardMessage.length > 80) return 'El mensaje de la tarjeta impresa no puede superar los 80 caracteres.';
 
     if (product.portraitType === 'box-musical' || product.portraitType === 'box-aniversario') {
       if (!document.getElementById('portraitSongInput').value.trim()) return 'Escribe el nombre o enlace de la canción.';
@@ -1071,9 +1216,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Escribe una fecha válida en formato Día / Mes / Año.';
       }
       if (dedication.length > 80) return 'La dedicatoria grabada no puede superar los 80 caracteres.';
-      if (!document.getElementById('portraitFrom').value.trim() || !document.getElementById('portraitTo').value.trim()) {
-        return 'Completa los campos De y Para de la tarjeta.';
-      }
     }
     if (product.portraitType === 'amore-mio') {
       if (selectedPortraitSongMode === 'link') {
@@ -1242,6 +1384,7 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           dedication: cristalDedication.value.trim(),
           baseColor: { id: selectedBase, label: baseLabels[selectedBase] },
+          includedBenefit: product.includedBenefit,
           complement: complementId === 'vela'
             ? { id: 'vela', label: 'Vela de corazón tejido', cost: 0 }
             : {
@@ -1265,6 +1408,7 @@ document.addEventListener('DOMContentLoaded', () => {
           type: portraitType,
           photos: references.photos,
           dedication: { type: dedicationType, text: document.getElementById('portraitDedication').value.trim() },
+          card: { message: document.getElementById('portraitCardMessage').value.trim() },
           includedBenefit: product.includedBenefit
         };
         if (portraitType === 'box-musical' || portraitType === 'box-aniversario') {
@@ -1279,10 +1423,6 @@ document.addEventListener('DOMContentLoaded', () => {
             second: document.getElementById('portraitNameTwo').value.trim()
           };
           portrait.anniversaryDate = `${day}/${month}/${year}`;
-          portrait.card = {
-            from: document.getElementById('portraitFrom').value.trim(),
-            to: document.getElementById('portraitTo').value.trim()
-          };
         }
         if (portraitType === 'amore-mio') {
           portrait.song = selectedPortraitSongMode === 'link'

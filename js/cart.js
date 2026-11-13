@@ -215,6 +215,9 @@ const Cart = {
           }
           if (cristalLove.dedication) customHTML += `<span class="cart-cristal-detail">Dedicatoria: ${this.escapeHTML(cristalLove.dedication)}</span>`;
           if (cristalLove.baseColor?.label) customHTML += `<span>Base: ${this.escapeHTML(cristalLove.baseColor.label)}</span>`;
+          if (cristalLove.includedBenefit?.item && cristalLove.includedBenefit.cost === 0) {
+            customHTML += `<span>Incluido sin costo adicional: ${this.escapeHTML(cristalLove.includedBenefit.item)}</span>`;
+          }
           if (cristalLove.complement?.label) {
             customHTML += `<span>Complemento sin costo: ${this.escapeHTML(cristalLove.complement.label)}</span>`;
             const lovePhrase = cristalLove.complement.phrase;
@@ -267,8 +270,11 @@ const Cart = {
             const dedicationLabel = portrait.dedication.type === 'grabada' ? 'Dedicatoria grabada' : 'Dedicatoria impresa';
             customHTML += `<span>${dedicationLabel}: ${this.escapeHTML(portrait.dedication.text)}</span>`;
           }
-          if (portrait.card?.from) customHTML += `<span>De: ${this.escapeHTML(portrait.card.from)}</span>`;
-          if (portrait.card?.to) customHTML += `<span>Para: ${this.escapeHTML(portrait.card.to)}</span>`;
+          if (portrait.card?.message) customHTML += `<span>Mensaje para tarjeta impresa: ${this.escapeHTML(portrait.card.message)}</span>`;
+          else {
+            if (portrait.card?.from) customHTML += `<span>De: ${this.escapeHTML(portrait.card.from)}</span>`;
+            if (portrait.card?.to) customHTML += `<span>Para: ${this.escapeHTML(portrait.card.to)}</span>`;
+          }
           if (portrait.includedBenefit?.label && portrait.includedBenefit.cost === 0) {
             customHTML += `<span>Incluido sin costo: ${this.escapeHTML(portrait.includedBenefit.label)}</span>`;
           }
@@ -380,6 +386,9 @@ const Cart = {
         }
         if (cristalLove.dedication) message += `📝 Dedicatoria de tarjeta: ${cristalLove.dedication}\n`;
         if (cristalLove.baseColor?.label) message += `🎨 Color de la base: ${cristalLove.baseColor.label}\n`;
+        if (cristalLove.includedBenefit?.item && cristalLove.includedBenefit.cost === 0) {
+          message += `🎁 Incluido sin costo adicional: ${cristalLove.includedBenefit.item}\n`;
+        }
         if (cristalLove.complement?.id === 'vela') {
           message += '🎁 Complemento sin costo adicional: Vela de corazón tejido\n';
         } else if (cristalLove.complement?.id === 'frase-love') {
@@ -425,8 +434,11 @@ const Cart = {
           const dedicationLabel = portrait.dedication.type === 'grabada' ? 'Dedicatoria grabada' : 'Dedicatoria impresa';
           message += `✍️ ${dedicationLabel}: ${portrait.dedication.text}\n`;
         }
-        if (portrait.card?.from) message += `💌 De: ${portrait.card.from}\n`;
-        if (portrait.card?.to) message += `💌 Para: ${portrait.card.to}\n`;
+        if (portrait.card?.message) message += `💌 Mensaje para tarjeta impresa: ${portrait.card.message}\n`;
+        else {
+          if (portrait.card?.from) message += `💌 De: ${portrait.card.from}\n`;
+          if (portrait.card?.to) message += `💌 Para: ${portrait.card.to}\n`;
+        }
         if (portrait.includedBenefit?.label && portrait.includedBenefit.cost === 0) {
           message += `🎁 Incluido sin costo adicional: ${portrait.includedBenefit.label}\n`;
         }

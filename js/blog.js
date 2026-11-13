@@ -127,7 +127,8 @@ const portalArticles = [
         heading: 'Imaginar dónde vivirá ese recuerdo',
         blocks: [
           { t: 'p', text: 'Antes de elegir, piensa en el espacio de quien recibirá el regalo. ¿Hay una repisa libre, una mesa de noche o un escritorio que use todos los días? Imaginar el lugar ayuda a tomar una decisión más personal.' },
-          { t: 'p', text: 'La luz tiene una presencia particular en una habitación: cambia cómo se siente un rincón y acompaña momentos distintos del día. Por eso una lámpara puede ser una forma significativa de presentar un recuerdo.' }
+          { t: 'p', text: 'La luz tiene una presencia particular en una habitación: cambia cómo se siente un rincón y acompaña momentos distintos del día. Por eso una lámpara puede ser una forma significativa de presentar un recuerdo.' },
+          { t: 'figure', src: 'assets/images/blog_3.png', alt: 'Sala de estar acogedora con lámparas y velas encendidas', caption: 'Un recuerdo también puede encontrar su lugar en un rincón cotidiano.' }
         ]
       },
       {
@@ -136,6 +137,7 @@ const portalArticles = [
         blocks: [
           { t: 'p', text: 'No todas las historias se expresan igual. Si la imagen es el centro, un portarretrato personalizado puede mantenerla visible. Si buscas una pieza decorativa, puedes revisar los acrílicos. Para una celebración relacionada con un bebé, existen las Velas Baby.' },
           { t: 'figure', src: 'assets/images/VELAS/VELASBABY.JPG', alt: 'Dos velas con forma de animal sentadas frente a bases rosadas', caption: 'Velas Baby, de la colección del mismo nombre.' },
+          { t: 'figure', src: 'assets/images/about_image.png', alt: 'Manos envolviendo una vela aromática con flores secas en una mesa de trabajo', caption: 'Los detalles artesanales también forman parte de la experiencia del regalo.' },
           { t: 'p', text: 'La mejor elección no es la más llamativa, sino la que permite que quien la recibe entienda por qué pensaste en ese objeto.' }
         ]
       },
