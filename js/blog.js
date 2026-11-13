@@ -73,7 +73,7 @@ const portalArticles = [
     ],
     closingTitle: 'Que el regalo abra una conversación',
     closing: 'Cuando un objeto señala un recuerdo compartido, la celebración no termina al guardar la envoltura: queda una historia para volver a contar. Piensa en la escena que quieres conservar y elige el formato que mejor le haga espacio.',
-    productIds: ['portarretratos', 'lunas-love', 'acrilicos'],
+    productIds: ['box-musical', 'lunas-love', 'cristal-love-amigos'],
     cta: 'Explorar productos personalizados'
   },
   {

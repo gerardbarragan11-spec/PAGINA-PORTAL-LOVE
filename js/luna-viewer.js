@@ -41,6 +41,8 @@ function mount(container, { modelUrl, label }) {
   let renderer;
   let controls;
   let frame = 0;
+  let requestRender = () => {};
+  let handleDocumentVisibility;
   let visible = true;
   let needsRender = true;
   let material;
@@ -121,15 +123,19 @@ function mount(container, { modelUrl, label }) {
         controls.maxDistance = distance * 2.5;
       }
       needsRender = true;
+      requestRender();
     };
 
     controls = new OrbitControls(camera, canvas);
-    controls.enableDamping = true;
+    controls.enableDamping = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     controls.enablePan = false;
     controls.target.set(0, 0, 0);
     canvas.style.touchAction = 'pan-y'; // keep vertical page scroll on touch screens
     controls.addEventListener('start', () => { interacted = true; });
-    controls.addEventListener('change', () => { needsRender = true; });
+    controls.addEventListener('change', () => {
+      needsRender = true;
+      requestRender();
+    });
 
     resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
@@ -137,15 +143,30 @@ function mount(container, { modelUrl, label }) {
     status.remove();
 
     const tick = () => {
-      frame = requestAnimationFrame(tick);
+      frame = 0;
       if (!visible || document.hidden) return;
       const moved = controls.update();
       if (moved || needsRender) {
         renderer.render(scene, camera);
         needsRender = false;
       }
+      if (moved && !frame) frame = requestAnimationFrame(tick);
     };
-    tick();
+    requestRender = () => {
+      if (frame || !visible || document.hidden) return;
+      frame = requestAnimationFrame(tick);
+    };
+    handleDocumentVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        return;
+      }
+      needsRender = true;
+      requestRender();
+    };
+    document.addEventListener('visibilitychange', handleDocumentVisibility);
+    requestRender();
   }
 
   // Start downloading only when the viewer is about to be seen.
@@ -154,6 +175,10 @@ function mount(container, { modelUrl, label }) {
     if (visible) {
       needsRender = true;
       start();
+      requestRender();
+    } else if (frame) {
+      cancelAnimationFrame(frame);
+      frame = 0;
     }
   }, { rootMargin: '300px 0px' });
   visibilityObserver.observe(container);
@@ -163,6 +188,7 @@ function mount(container, { modelUrl, label }) {
     dispose() {
       disposed = true;
       cancelAnimationFrame(frame);
+      if (handleDocumentVisibility) document.removeEventListener('visibilitychange', handleDocumentVisibility);
       visibilityObserver?.disconnect();
       resizeObserver?.disconnect();
       controls?.dispose();

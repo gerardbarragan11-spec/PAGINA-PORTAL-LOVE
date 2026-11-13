@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portalovers | Regalos Personalizados que Emocionan</title>
   <meta name="description" content="Lámparas 3D, portarretratos y velas personalizadas. Crea regalos únicos que cuentan tu historia.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:site_name" content="Portal Love">
+  <meta property="og:title" content="Portalovers | Regalos Personalizados que Emocionan">
+  <meta property="og:description" content="Lámparas 3D, portarretratos y velas personalizadas. Crea regalos únicos que cuentan tu historia.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -31,7 +36,7 @@
         </ul>
       </nav>
       <div class="header-actions">
-        <button class="cart-icon" id="cartIcon" type="button" aria-label="Ver carrito">
+        <button class="cart-icon" id="cartIcon" type="button" aria-label="Ver carrito" aria-controls="cartPanel" aria-expanded="false">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
         </button>
@@ -43,18 +48,16 @@
   </header>
 
   <section id="inicio" class="hero">
-    <div class="hero-ambient" aria-hidden="true">
-      <span class="orb orb-one"></span>
-      <span class="orb orb-two"></span>
-      <span class="orb orb-three"></span>
-    </div>
-    <div class="hero-overlay"></div>
+    <video class="hero-video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
+      <source src="assets/images/VIDEO%20FONDO%20INICIAL.mp4" type="video/mp4">
+    </video>
+    <canvas class="hero-static" aria-hidden="true" hidden></canvas>
     <div class="hero-content">
       <span class="hero-subtitle">Portal Love</span>
       <h1 class="hero-title">Transformamos tus recuerdos en luz</h1>
-      <p class="hero-desc">Lámparas personalizadas, Portarretratos, Velas</p>
+      <p class="hero-desc">Lámparas personalizadas, portarretratos y velas</p>
       <div class="hero-actions">
-        <a href="#catalogo" class="btn btn-primary">Explorar Catálogo</a>
+        <a href="#catalogo" class="btn btn-primary">Explorar catálogo</a>
         <a href="#catalogo" class="btn btn-outline">Personaliza en 2 minutos</a>
       </div>
     </div>
@@ -63,10 +66,10 @@
   <section class="trust-bar" aria-label="Por qué elegirnos">
     <div class="container">
       <div class="trust-grid">
-        <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg></span><div class="trust-text"><h4>+2,400 Clientes Felices</h4></div></div>
-        <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg></span><div class="trust-text"><h4>Regalos Personalizados</h4></div></div>
+        <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg></span><div class="trust-text"><h4>+2.400 clientes felices</h4></div></div>
+        <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg></span><div class="trust-text"><h4>Regalos personalizados</h4></div></div>
         <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></span><div class="trust-text"><h4>Envíos a todo el país</h4></div></div>
-        <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></span><div class="trust-text"><h4>Calidad Garantizada</h4></div></div>
+        <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></span><div class="trust-text"><h4>Calidad garantizada</h4></div></div>
       </div>
     </div>
   </section>
@@ -74,7 +77,7 @@
   <section class="showcase">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Clientes Satisfechos</h2>
+        <h2 class="section-title">Clientes satisfechos</h2>
         <p class="section-subtitle">Desliza para explorar nuestras creaciones más especiales</p>
       </div>
     </div>
@@ -113,50 +116,42 @@
     </div>
   </section>
 
-  <!-- About -->
-  <section id="nosotros" class="section about">
-    <div class="about-story">
-      <div class="about-story-image">
-        <img src="assets/images/about_image.png" alt="Preparación artesanal de un regalo en Portalovers">
-      </div>
-      <div class="about-story-inner container">
-        <div class="about-content reveal-left">
-          <h2>Detrás de Cada Regalo, Hay una Historia</h2>
-          <p>En Portalovers, creemos que los mejores regalos son los que cuentan una historia. Por más de 5 años, nos hemos dedicado a crear piezas únicas que inmortalizan tus momentos más especiales.</p>
-          <ul class="about-values">
-            <li class="about-value">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Hecho a mano con amor
-            </li>
-            <li class="about-value">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Materiales eco-amigables
-            </li>
-            <li class="about-value">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Atención personalizada
-            </li>
-          </ul>
+  <!-- Packing campaign -->
+  <section id="nosotros" class="packing-section" aria-labelledby="packingTitle">
+    <div class="packing-layout container">
+      <header class="packing-copy reveal-left">
+        <h2 id="packingTitle" class="packing-title">El primer abrazo<br>es el <em>empaque.</em></h2>
+        <p>Empacamos con amor, para el amor.</p>
+      </header>
+
+      <div class="packing-scene" role="group" aria-label="Detalles de empaque de Portal Love">
+        <div class="packing-orbit" aria-hidden="true"></div>
+
+        <figure class="packing-shot packing-shot--box reveal-right">
+          <img class="packing-photo" data-packing-parallax="0.55" src="assets/images/PACKING/Gemini_Generated_Image_facy4lfacy4lfacy.jpg" alt="Caja Portal Love lista para convertirse en regalo" loading="lazy" decoding="async">
+          <figcaption><span>01</span> La primera impresión</figcaption>
+        </figure>
+
+        <figure class="packing-shot packing-shot--delivery reveal-left">
+          <img class="packing-photo" data-packing-parallax="-0.45" src="assets/images/PACKING/Gemini_Generated_Image_t0jtxet0jtxet0jt.jpg" alt="Una caja Portal Love entregada cuidadosamente entre las manos" loading="lazy" decoding="async">
+          <figcaption>Preparado para entregar</figcaption>
+        </figure>
+
+        <figure class="packing-shot packing-shot--moon reveal-up">
+          <img class="packing-photo" data-packing-parallax="0.7" src="assets/images/PACKING/Gemini_Generated_Image_naf257naf257naf2.jpg" alt="Empaque Portal Love junto a una lámpara Luna encendida" loading="lazy" decoding="async">
+        </figure>
+
+        <div class="packing-pouch-wrap reveal-up">
+          <img class="packing-pouch" data-packing-parallax="-0.6" src="assets/images/PACKING/Gemini_Generated_Image_pu5181pu5181pu51-Photoroom.png" alt="Bolsa de tela Portal Love con logotipo y cordón de cierre" loading="lazy" decoding="async">
         </div>
+
+        <span class="packing-scene-seal" aria-hidden="true">Hecho con<br>intención</span>
       </div>
     </div>
-    <div class="about-stats-band">
-      <div class="container">
-        <div class="stats reveal-up">
-          <div class="stat-item reveal-up">
-            <div class="stat-number counter" data-target="2400">0</div>
-            <div class="stat-label">Clientes Felices</div>
-          </div>
-          <div class="stat-item reveal-up">
-            <div class="stat-number counter" data-target="183">0</div>
-            <div class="stat-label">Creaciones Semanales</div>
-          </div>
-          <div class="stat-item reveal-up">
-            <div class="stat-number counter" data-target="5">0</div>
-            <div class="stat-label">Años de Experiencia</div>
-          </div>
-        </div>
-      </div>
+
+    <div class="packing-colophon container reveal-up">
+      <span>NO ENTREGAMOS SOLAMENTE UN REGALO</span>
+      <p>Entregamos una <em>experiencia.</em></p>
     </div>
   </section>
 
@@ -255,7 +250,7 @@
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Testimonios</h2>
-        <p class="section-subtitle">Lo que dicen nuestros clientes</p>
+        <p class="section-subtitle">Nuestra pasión es servirle al amor</p>
       </div>
       <div class="testimonial-gallery">
         <figure class="float-shot"><img src="assets/images/TESTIMONIOS/Screenshot_20261029_140857_WhatsApp.jpg.jpeg" width="1078" height="1109" alt="Captura de pantalla de un mensaje de cliente en WhatsApp" loading="lazy" decoding="async"></figure>
@@ -279,27 +274,16 @@
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Contacto</h2>
-        <p class="section-subtitle">¿Tienes alguna duda? Escríbenos.</p>
       </div>
       <div class="contact-grid">
         <div class="contact-info-cards reveal-left">
-          <p class="contact-kicker">Hablemos de tu regalo</p>
-          <div class="contact-card">
+          <a class="contact-card contact-card-link" href="https://www.instagram.com/portalovers/" target="_blank" rel="noopener">
             <div class="contact-icon" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </div>
             <div class="contact-details">
-              <h4>Ubicación</h4>
-              <p>Cúcuta, Norte de Santander, Colombia</p>
-            </div>
-          </div>
-          <a class="contact-card contact-card-link" href="mailto:Portalove.contactos@gmail.com">
-            <div class="contact-icon" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><polyline points="22,6 12,13 2,6"></polyline></svg>
-            </div>
-            <div class="contact-details">
-              <h4>Correo electrónico</h4>
-              <p>Portalove.contactos@gmail.com</p>
+              <h4>Instagram</h4>
+              <p>@portalovers</p>
             </div>
             <span class="contact-arrow" aria-hidden="true">→</span>
           </a>
@@ -313,17 +297,36 @@
             </div>
             <span class="contact-arrow" aria-hidden="true">→</span>
           </a>
+          <a class="contact-card contact-card-link" href="mailto:Portalove.contactos@gmail.com">
+            <div class="contact-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </div>
+            <div class="contact-details">
+              <h4>Correo electrónico</h4>
+              <p>Portalove.contactos@gmail.com</p>
+            </div>
+            <span class="contact-arrow" aria-hidden="true">→</span>
+          </a>
+          <div class="contact-card">
+            <div class="contact-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+            <div class="contact-details">
+              <h4>Ubicación</h4>
+              <p>Cúcuta, Norte de Santander, Colombia</p>
+            </div>
+          </div>
         </div>
         <div class="contact-form reveal-right">
           <h3 class="contact-form-title">Escríbenos por WhatsApp</h3>
           <form id="contactForm">
             <div class="form-group">
               <input type="text" id="contactName" class="form-control" placeholder=" " required>
-              <label for="contactName" class="form-label">Tu Nombre</label>
+              <label for="contactName" class="form-label">Tu nombre</label>
             </div>
             <div class="form-group">
               <textarea id="contactMessage" class="form-control" placeholder=" " required></textarea>
-              <label for="contactMessage" class="form-label">Tu Mensaje</label>
+              <label for="contactMessage" class="form-label">Tu mensaje</label>
             </div>
             <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar por WhatsApp</button>
           </form>
@@ -337,10 +340,10 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="#" class="footer-logo">Portalovers</a>
+          <a href="#inicio" class="footer-logo">Portalovers</a>
           <p class="footer-desc">Creando recuerdos imborrables a través de regalos personalizados con amor y dedicación.</p>
           <div class="social-links">
-            <a href="https://www.instagram.com/portalovers/" target="_blank" class="social-link" aria-label="Instagram">
+            <a href="https://www.instagram.com/portalovers/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
           </div>
@@ -356,8 +359,8 @@
         <div>
           <h4 class="footer-title">Soporte</h4>
           <div class="footer-links">
-            <a href="#">Preguntas Frecuentes</a>
-            <a href="#">Envíos y Devoluciones</a>
+            <a href="#contacto" data-support-message="Hola, tengo una duda sobre uno de los productos. ¿Podrían ayudarme?">Preguntas frecuentes</a>
+            <a href="#contacto" data-support-message="Hola, quisiera conocer las opciones de envío y cómo solicitar una devolución.">Envíos y devoluciones</a>
           </div>
         </div>
         <div>
@@ -375,7 +378,7 @@
   </footer>
 
   <!-- Floating WhatsApp -->
-  <a href="https://wa.me/573106969740" class="floating-wa" target="_blank" aria-label="Chat WhatsApp">
+  <a href="https://wa.me/573106969740" class="floating-wa" target="_blank" rel="noopener noreferrer" aria-label="Chat WhatsApp">
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
   </a>
 
@@ -396,7 +399,7 @@
     const hero = document.querySelector('.hero');
     const heroContent = document.querySelector('.hero-content');
 
-    if (hero && heroContent) {
+    if (hero && heroContent && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       hero.addEventListener('pointermove', (event) => {
         const rect = hero.getBoundingClientRect();
         const x = (event.clientX - rect.left) / rect.width - 0.5;

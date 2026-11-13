@@ -50,6 +50,67 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const prefersReducedMotion = motionPreference.matches;
+  const scrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+
+  const heroVideo = document.querySelector('.hero-video');
+  const heroStatic = document.querySelector('.hero-static');
+  if (heroVideo && heroStatic) {
+    const drawStaticHero = () => {
+      if (!motionPreference.matches || !heroVideo.videoWidth || !heroVideo.videoHeight) return;
+      heroStatic.width = heroVideo.videoWidth;
+      heroStatic.height = heroVideo.videoHeight;
+      const context = heroStatic.getContext('2d', { alpha: false });
+      context.fillStyle = getComputedStyle(heroStatic).backgroundColor;
+      context.fillRect(0, 0, heroStatic.width, heroStatic.height);
+      context.globalCompositeOperation = 'darken';
+      context.drawImage(heroVideo, 0, 0);
+      heroVideo.pause();
+      heroVideo.hidden = true;
+      heroStatic.hidden = false;
+    };
+
+    const showStaticHero = () => {
+      heroVideo.pause();
+      const seekToLogo = () => {
+        if (!motionPreference.matches) return;
+        const posterTime = Math.min(6, Math.max(0, heroVideo.duration - 0.1));
+        if (Math.abs(heroVideo.currentTime - posterTime) > 0.05) {
+          heroVideo.addEventListener('seeked', drawStaticHero, { once: true });
+          heroVideo.currentTime = posterTime;
+        } else {
+          drawStaticHero();
+        }
+      };
+
+      if (heroVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        seekToLogo();
+      } else {
+        heroVideo.preload = 'auto';
+        heroVideo.addEventListener('loadeddata', seekToLogo, { once: true });
+        heroVideo.load();
+      }
+    };
+
+    const applyHeroMotionPreference = () => {
+      if (motionPreference.matches) {
+        heroVideo.autoplay = false;
+        heroVideo.removeAttribute('autoplay');
+        heroStatic.hidden = true;
+        showStaticHero();
+      } else {
+        heroStatic.hidden = true;
+        heroVideo.hidden = false;
+        heroVideo.autoplay = true;
+        heroVideo.play().catch(() => {});
+      }
+    };
+
+    applyHeroMotionPreference();
+    motionPreference.addEventListener('change', applyHeroMotionPreference);
+  }
+
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', event => {
       const targetId = anchor.getAttribute('href').slice(1);
@@ -58,14 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!target) return;
       event.preventDefault();
       window.history.pushState(null, '', `#${target.id}`);
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.scrollIntoView({ behavior: scrollBehavior, block: 'start' });
     });
   });
 
   const backToTopBtn = document.getElementById('backToTop');
   const floatingWa = document.querySelector('.floating-wa');
-  const aboutImage = document.querySelector('.about-story-image img');
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const packingParallaxLayers = document.querySelectorAll('[data-packing-parallax]');
   let previousScrollY = window.scrollY;
   let scrollFrame = 0;
 
@@ -84,11 +144,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (backToTopBtn) backToTopBtn.classList.toggle('visible', currentScrollY > 300);
     if (floatingWa) floatingWa.classList.toggle('floating-wa-raised', currentScrollY > 300);
-    if (aboutImage && !prefersReducedMotion && window.innerWidth > 768) {
-      const imageBounds = aboutImage.parentElement.getBoundingClientRect();
-      const imageCenter = imageBounds.top + imageBounds.height / 2;
-      const parallaxOffset = Math.max(-18, Math.min(18, (window.innerHeight / 2 - imageCenter) * 0.04));
-      aboutImage.style.setProperty('--about-parallax', `${parallaxOffset}px`);
+    if (packingParallaxLayers.length && !prefersReducedMotion && window.innerWidth > 768) {
+      packingParallaxLayers.forEach(layer => {
+        const bounds = layer.getBoundingClientRect();
+        const center = bounds.top + bounds.height / 2;
+        const depth = Number(layer.dataset.packingParallax) || 0;
+        const offset = Math.max(-26, Math.min(26, (window.innerHeight / 2 - center) * depth));
+        layer.style.setProperty('--packing-shift', `${offset}px`);
+      });
     }
     previousScrollY = currentScrollY;
   };
@@ -147,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const featuredVideo = document.createElement('video');
       featuredVideo.className = 'collection-video';
       featuredVideo.src = collection.video;
-      featuredVideo.autoplay = true;
+      featuredVideo.autoplay = false;
       featuredVideo.muted = true;
       featuredVideo.loop = true;
       featuredVideo.playsInline = true;
@@ -223,6 +286,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const orderedCollections = [...catalogCollections].sort((first, second) => Number(Boolean(second.featured)) - Number(Boolean(first.featured)));
     orderedCollections.forEach(collection => catalogGrid.append(createCollectionCard(collection)));
   }
+  const collectionVideos = catalogGrid ? Array.from(catalogGrid.querySelectorAll('.collection-video')) : [];
+  if (!prefersReducedMotion && collectionVideos.length) {
+    if ('IntersectionObserver' in window) {
+      const collectionVideoObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.play().catch(() => {});
+          else entry.target.pause();
+        });
+      }, { rootMargin: '120px 0px' });
+      collectionVideos.forEach(video => collectionVideoObserver.observe(video));
+    } else {
+      collectionVideos.forEach(video => video.play().catch(() => {}));
+    }
+  }
 
   const productShowcaseTrack = document.getElementById('showcaseTrack');
   if (productShowcaseTrack) {
@@ -244,6 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (drift > 0.35 && drift < video.duration - 0.35) video.currentTime = target;
     };
     const startVideo = video => {
+      if (prefersReducedMotion) return;
       activeVideos.add(video);
       if (!video.getAttribute('src')) {
         video.preload = 'auto';
@@ -269,7 +347,16 @@ document.addEventListener('DOMContentLoaded', () => {
       window.addEventListener(type, retryPlayback, { passive: true, once: true });
     });
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) retryPlayback();
+      if (document.hidden) {
+        activeVideos.forEach(video => video.pause());
+        collectionVideos.forEach(video => video.pause());
+        return;
+      }
+      retryPlayback();
+      if (!prefersReducedMotion) collectionVideos.forEach(video => {
+        const bounds = video.getBoundingClientRect();
+        if (bounds.top < window.innerHeight && bounds.bottom > 0) video.play().catch(() => {});
+      });
     });
     const videoObserver = 'IntersectionObserver' in window
       ? new IntersectionObserver(entries => {
@@ -370,20 +457,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
       productCards.forEach(card => {
         clearTimeout(cardFilterTimers.get(card));
-        if (filter === 'todos' || card.getAttribute('data-category') === filter) {
+        const shouldShow = filter === 'todos' || card.getAttribute('data-category') === filter;
+        if (shouldShow) {
+          const wasHidden = card.style.display === 'none';
           card.style.display = 'flex';
-          cardFilterTimers.set(card, setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'scale(1)';
-            cardFilterTimers.delete(card);
-          }, 10));
+          card.classList.remove('filter-exit');
+          if (!prefersReducedMotion && wasHidden) {
+            card.classList.add('filter-enter');
+            window.requestAnimationFrame(() => card.classList.remove('filter-enter'));
+          } else {
+            card.classList.remove('filter-enter');
+          }
+        } else if (prefersReducedMotion) {
+          card.classList.remove('filter-enter', 'filter-exit');
+          card.style.display = 'none';
         } else {
-          card.style.opacity = '0';
-          card.style.transform = 'scale(0.9)';
+          card.classList.remove('filter-enter');
+          card.classList.add('filter-exit');
           cardFilterTimers.set(card, setTimeout(() => {
             card.style.display = 'none';
+            card.classList.remove('filter-exit');
             cardFilterTimers.delete(card);
-          }, 300));
+          }, 320));
         }
       });
     });
@@ -400,14 +495,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const progress = Math.min((now - startTime) / duration, 1);
         const easedProgress = 1 - Math.pow(1 - progress, 3);
         const currentValue = Math.round(target * easedProgress);
-        counter.textContent = `${currentValue}${progress === 1 && target > 1000 ? '+' : ''}`;
+        counter.textContent = `${currentValue.toLocaleString('es-CO')}${progress === 1 && target > 1000 ? '+' : ''}`;
         if (progress < 1) window.requestAnimationFrame(updateCounter);
       };
       window.requestAnimationFrame(updateCounter);
     });
   };
 
-  if (aboutSection && counters.length && 'IntersectionObserver' in window) {
+  if (aboutSection && counters.length && !prefersReducedMotion && 'IntersectionObserver' in window) {
     const counterObserver = new IntersectionObserver(entries => {
       if (!entries.some(entry => entry.isIntersecting)) return;
       animateCounters();
@@ -417,7 +512,17 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (counters.length) {
     counters.forEach(counter => {
       const target = Number(counter.getAttribute('data-target'));
-      counter.textContent = `${target}${target > 1000 ? '+' : ''}`;
+      counter.textContent = `${target.toLocaleString('es-CO')}${target > 1000 ? '+' : ''}`;
+    });
+  }
+
+  const contactMessage = document.getElementById('contactMessage');
+  if (contactMessage) {
+    document.querySelectorAll('[data-support-message]').forEach(link => {
+      link.addEventListener('click', () => {
+        contactMessage.value = link.dataset.supportMessage;
+        contactMessage.focus({ preventScroll: true });
+      });
     });
   }
 
@@ -428,15 +533,14 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const name = document.getElementById('contactName').value;
       const message = document.getElementById('contactMessage').value;
-      const waNumber = '573106969740';
       const text = encodeURIComponent(`Hola, mi nombre es ${name}. ${message}`);
-      window.open(`https://wa.me/${waNumber}?text=${text}`, '_blank');
+      window.open(`https://wa.me/${Cart.WA_NUMBER}?text=${text}`, '_blank', 'noopener,noreferrer');
     });
   }
 
   if (backToTopBtn) {
     backToTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: scrollBehavior });
     });
   }
   
@@ -460,6 +564,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    const ambientMotionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        entry.target.classList.toggle('motion-paused', !entry.isIntersecting);
+      });
+    }, { rootMargin: '120px 0px' });
+    document.querySelectorAll('.hero, .showcase, .testimonials').forEach(section => {
+      ambientMotionObserver.observe(section);
+    });
+  }
+
   // Showcase Arrows
   const showcaseTrack = document.getElementById('showcaseTrack');
   const showcasePrev = document.getElementById('showcasePrev');
@@ -475,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const animation = showcaseTrack.getAnimations().find(item => item.animationName === 'scrollShowcase');
 
       if (!animation || !Number.isFinite(animation.effect.getTiming().duration)) {
-        showcaseWrapper.scrollBy({ left: step * direction, behavior: 'smooth' });
+        showcaseWrapper.scrollBy({ left: step * direction, behavior: scrollBehavior });
         return;
       }
 

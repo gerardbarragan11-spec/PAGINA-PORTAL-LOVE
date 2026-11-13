@@ -112,11 +112,11 @@ const Cart = {
     if (!sidebarContainer) return;
 
     sidebarContainer.innerHTML = `
-      <div class="cart-overlay" id="cartOverlay"></div>
-      <div class="cart-panel" id="cartPanel">
+      <div class="cart-overlay" id="cartOverlay" aria-hidden="true"></div>
+      <div class="cart-panel" id="cartPanel" role="region" aria-label="Carrito de compras" aria-hidden="true">
         <div class="cart-header">
           <h3>Tu Carrito</h3>
-          <button class="cart-close" id="cartClose">&times;</button>
+          <button class="cart-close" id="cartClose" type="button" aria-label="Cerrar carrito">&times;</button>
         </div>
         <div class="cart-items" id="cartItems"></div>
         <div class="cart-footer">
@@ -124,7 +124,7 @@ const Cart = {
             <span>Total:</span>
             <span class="cart-total-price" id="cartTotal">$0</span>
           </div>
-          <button class="cart-schedule" id="cartSchedule" disabled>
+          <button class="cart-schedule" id="cartSchedule" type="button" disabled>
             📱 Agendar Pedido por WhatsApp
           </button>
         </div>
@@ -134,6 +134,11 @@ const Cart = {
     document.getElementById('cartClose').addEventListener('click', () => this.closeSidebar());
     document.getElementById('cartOverlay').addEventListener('click', () => this.closeSidebar());
     document.getElementById('cartSchedule').addEventListener('click', () => this.scheduleOrder());
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && document.getElementById('cartPanel')?.classList.contains('open')) {
+        this.closeSidebar();
+      }
+    });
 
     document.getElementById('cartItems').addEventListener('click', (e) => {
       const removeBtn = e.target.closest('.cart-item-remove');
@@ -175,9 +180,9 @@ const Cart = {
     if (items.length === 0) {
       cartItems.innerHTML = `
         <div class="cart-empty">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:1rem;color:#cd96a2;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:1rem;color:#b93851;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
           <p>Tu carrito está vacío</p>
-          <p style="font-size: 0.85rem; color: #8a6874; margin-top: 0.5rem;">Explora nuestro catálogo y personaliza tu regalo perfecto</p>
+          <p style="font-size: 0.85rem; color: #b93851; margin-top: 0.5rem;">Explora nuestro catálogo y personaliza tu regalo perfecto</p>
         </div>
       `;
       cartSchedule.disabled = true;
@@ -203,8 +208,10 @@ const Cart = {
               customHTML += `<a class="cart-reference-link" href="${this.escapeHTML(photo.url)}" target="_blank" rel="noopener noreferrer">Foto ${photoIndex + 1}: ${this.escapeHTML(photo.name)}</a>`;
             }
           });
-          if (cristalLove.messageOption?.label) {
-            customHTML += `<span>Mensaje: ${this.escapeHTML(cristalLove.messageOption.label)} (frase pendiente de definir)</span>`;
+          if (cristalLove.messageOption?.phrase) {
+            customHTML += `<span>Mensaje: ${this.escapeHTML(cristalLove.messageOption.label)} · ${this.escapeHTML(cristalLove.messageOption.phrase)}</span>`;
+          } else if (cristalLove.messageOption?.label) {
+            customHTML += `<span>Mensaje: ${this.escapeHTML(cristalLove.messageOption.label)}</span>`;
           }
           if (cristalLove.dedication) customHTML += `<span class="cart-cristal-detail">Dedicatoria: ${this.escapeHTML(cristalLove.dedication)}</span>`;
           if (cristalLove.baseColor?.label) customHTML += `<span>Base: ${this.escapeHTML(cristalLove.baseColor.label)}</span>`;
@@ -252,7 +259,7 @@ const Cart = {
             }
           });
           if (portrait.song?.mode === 'name-or-link') customHTML += `<span>Canción: ${this.escapeHTML(portrait.song.value)}</span>`;
-          if (portrait.song?.mode === 'link') customHTML += `<span>Link de la canción: ${this.escapeHTML(portrait.song.value)}</span>`;
+          if (portrait.song?.mode === 'link') customHTML += `<span>Enlace de la canción: ${this.escapeHTML(portrait.song.value)}</span>`;
           if (portrait.song?.mode === 'audio') customHTML += '<span>Canción: archivo de audio adjunto</span>';
           if (portrait.names?.first) customHTML += `<span>Nombres: ${this.escapeHTML(portrait.names.first)} y ${this.escapeHTML(portrait.names.second)}</span>`;
           if (portrait.anniversaryDate) customHTML += `<span>Fecha: ${this.escapeHTML(portrait.anniversaryDate)}</span>`;
@@ -286,11 +293,11 @@ const Cart = {
               <div class="cart-item-price">${Number.isFinite(item.price) ? '$' + item.price.toLocaleString('es-CO') : 'Precio por cotizar'}</div>
             </div>
             <div class="cart-item-actions">
-              <button class="cart-item-remove" data-index="${index}">&times;</button>
+              <button class="cart-item-remove" type="button" data-index="${index}" aria-label="Eliminar ${this.escapeHTML(item.name)} del carrito">&times;</button>
               <div class="cart-item-qty">
-                <button class="qty-minus" data-index="${index}">−</button>
+                <button class="qty-minus" type="button" data-index="${index}" aria-label="Disminuir cantidad de ${this.escapeHTML(item.name)}">−</button>
                 <span>${item.quantity}</span>
-                <button class="qty-plus" data-index="${index}">+</button>
+                <button class="qty-plus" type="button" data-index="${index}" aria-label="Aumentar cantidad de ${this.escapeHTML(item.name)}">+</button>
               </div>
             </div>
           </div>
@@ -311,15 +318,25 @@ const Cart = {
   openSidebar() {
     const panel = document.getElementById('cartPanel');
     const overlay = document.getElementById('cartOverlay');
-    if (panel) panel.classList.add('open');
+    if (panel) {
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden', 'false');
+    }
     if (overlay) overlay.classList.add('open');
+    document.getElementById('cartIcon')?.setAttribute('aria-expanded', 'true');
+    document.getElementById('cartClose')?.focus();
   },
 
   closeSidebar() {
     const panel = document.getElementById('cartPanel');
     const overlay = document.getElementById('cartOverlay');
-    if (panel) panel.classList.remove('open');
+    if (panel) {
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
+    }
     if (overlay) overlay.classList.remove('open');
+    document.getElementById('cartIcon')?.setAttribute('aria-expanded', 'false');
+    document.getElementById('cartIcon')?.focus();
   },
 
   updateBadge() {
@@ -358,7 +375,8 @@ const Cart = {
           if (photo?.url) message += `📸 Fotografía ${photoIndex + 1}: ${photo.url}\n`;
         });
         if (cristalLove.messageOption?.label) {
-          message += `💌 Mensaje predeterminado: ${cristalLove.messageOption.label} (frase pendiente de definir)\n`;
+          const messagePhrase = cristalLove.messageOption.phrase;
+          message += `💌 Mensaje predeterminado: ${cristalLove.messageOption.label}${messagePhrase ? ` · ${messagePhrase}` : ''}\n`;
         }
         if (cristalLove.dedication) message += `📝 Dedicatoria de tarjeta: ${cristalLove.dedication}\n`;
         if (cristalLove.baseColor?.label) message += `🎨 Color de la base: ${cristalLove.baseColor.label}\n`;
@@ -381,7 +399,7 @@ const Cart = {
           if (photo?.url) message += `📸 Foto ${photoIndex + 1}: ${photo.url}\n`;
         });
         if (luna.qr?.option === 'audio') message += '🔊 QR: Audio o latido del corazón del bebé\n';
-        if (luna.qr?.option === 'song-link') message += `🔗 Link del QR: ${luna.qr.songLink}\n`;
+        if (luna.qr?.option === 'song-link') message += `🔗 Enlace del QR: ${luna.qr.songLink}\n`;
         if (luna.qr?.option === 'song' && luna.qr.song) message += `🎵 Canción: ${luna.qr.song}\n`;
         if (luna.dedication) message += `✍️ Dedicatoria grabada: ${luna.dedication}\n`;
         if (luna.base?.added) {
@@ -399,7 +417,7 @@ const Cart = {
           if (photo?.url) message += `📸 Foto ${photoIndex + 1}: ${photo.url}\n`;
         });
         if (portrait.song?.mode === 'name-or-link') message += `🎵 Canción: ${portrait.song.value}\n`;
-        if (portrait.song?.mode === 'link') message += `🔗 Link de la canción: ${portrait.song.value}\n`;
+        if (portrait.song?.mode === 'link') message += `🔗 Enlace de la canción: ${portrait.song.value}\n`;
         if (portrait.song?.mode === 'audio') message += '🎵 Canción: archivo de audio adjunto\n';
         if (portrait.names?.first) message += `💑 Nombres: ${portrait.names.first} y ${portrait.names.second}\n`;
         if (portrait.anniversaryDate) message += `📅 Fecha: ${portrait.anniversaryDate}\n`;
@@ -441,7 +459,7 @@ const Cart = {
 
   scheduleOrder() {
     const msg = this.generateWhatsAppMessage();
-    window.open(`https://wa.me/${this.WA_NUMBER}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${this.WA_NUMBER}?text=${msg}`, '_blank', 'noopener,noreferrer');
   }
 };
 

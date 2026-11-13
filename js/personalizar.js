@@ -32,6 +32,21 @@ document.addEventListener('DOMContentLoaded', () => {
       photoLimit: Number.isInteger(collection.photoLimit) ? collection.photoLimit : 0
     };
   });
+  const cristalMessagesByTheme = {
+    Amor: [
+      'Amor gracias por ser la luz en mi vida.',
+      'Amor feliz aniversario.',
+      'Hogar es donde estoy contigo.',
+      'Juntos todo es mejor.',
+      'Siempre tu y yo.',
+      'Suerte es tenerte en mi vida.'
+    ],
+    Amistad: [
+      'Gracias por ser mi lugar seguro.',
+      'Siempre seras mi lugar seguro.',
+      'Tu amistad me llena el alma.'
+    ]
+  };
   const productId = params.get('id');
   const product = Object.prototype.hasOwnProperty.call(products, productId)
     ? { id: productId, ...products[productId] }
@@ -149,8 +164,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 2. Populate preview
-  document.getElementById('previewProductImg').src = product.image;
-  document.getElementById('previewProductImg').alt = product.name;
+  const previewProductImage = document.getElementById('previewProductImg');
+  const previewImages = product.images?.length ? product.images : [product.image];
+  const previousPreviewImageButton = document.getElementById('previewImagePrevious');
+  const nextPreviewImageButton = document.getElementById('previewImageNext');
+  const previewImageCounter = document.getElementById('previewImageCounter');
+  let previewImageIndex = Math.max(0, previewImages.indexOf(product.image));
+  const hasPreviewGallery = previewImages.length > 1;
+
+  previousPreviewImageButton.hidden = !hasPreviewGallery;
+  nextPreviewImageButton.hidden = !hasPreviewGallery;
+  previewImageCounter.hidden = !hasPreviewGallery;
+
+  function showPreviewImage(index) {
+    previewImageIndex = (index + previewImages.length) % previewImages.length;
+    previewProductImage.src = previewImages[previewImageIndex];
+    previewProductImage.alt = `${product.name}, foto ${previewImageIndex + 1} de ${previewImages.length}`;
+    previewImageCounter.textContent = `Foto ${previewImageIndex + 1} de ${previewImages.length}`;
+  }
+
+  showPreviewImage(previewImageIndex);
+  if (hasPreviewGallery) {
+    previousPreviewImageButton.addEventListener('click', () => showPreviewImage(previewImageIndex - 1));
+    nextPreviewImageButton.addEventListener('click', () => showPreviewImage(previewImageIndex + 1));
+  }
+
   document.getElementById('previewName').textContent = product.name;
   document.getElementById('previewPrice').textContent = product.priceOnRequest
     ? 'Precio por cotizar'
@@ -369,6 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
       storedImageReference = null;
       uploadedImageName = file.name;
       uploadPreview.classList.add('has-image');
+      animatePreviewEntry(uploadPreview);
       uploadArea.style.display = 'none';
       uploadFeedback.textContent = `Imagen lista: ${file.name} (${formatFileSize(file.size)}). Se almacenará al agregar el producto.`;
     };
@@ -401,6 +440,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  }
+
+  function animatePreviewEntry(element) {
+    if (prefersReducedMotion || typeof element.animate !== 'function') return;
+    element.animate(
+      [
+        { opacity: 0, transform: 'translate3d(0, 10px, 0) scale(0.99)' },
+        { opacity: 1, transform: 'translate3d(0, 0, 0) scale(1)' }
+      ],
+      { duration: 280, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+    );
   }
 
   function renderPhotoSlots(grid, files, previewUrls, feedback, limit, onUpdate = () => {}) {
@@ -491,6 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
           image.src = nextPreviewUrl;
           preview.hidden = false;
           slot.classList.add('has-photo');
+          animatePreviewEntry(preview);
           updateFeedback();
           input.value = '';
         };
@@ -507,6 +558,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (product.isCristalLove) {
     renderPhotoSlots(cristalPhotoGrid, cristalPhotoFiles, cristalPhotoPreviewUrls, cristalPhotoFeedback, product.photoLimit);
+    const cristalMessageOptions = cristalMessagesByTheme[product.theme] || [];
+    const cristalMessageChoices = document.getElementById('cristalMessageChoices');
+    cristalMessageOptions.forEach((phrase, index) => {
+      const option = document.createElement('button');
+      option.type = 'button';
+      option.className = 'cristal-choice-card';
+      option.dataset.choiceGroup = 'cristal-message';
+      option.dataset.value = String(index + 1);
+      option.setAttribute('aria-pressed', 'false');
+
+      const label = document.createElement('strong');
+      label.textContent = `Opción ${index + 1}`;
+      const text = document.createElement('span');
+      text.textContent = phrase;
+      option.append(label, text);
+      cristalMessageChoices.append(option);
+    });
   }
   if (product.isPortrait) {
     renderPhotoSlots(portraitPhotoGrid, portraitPhotoFiles, portraitPhotoPreviewUrls, portraitPhotoFeedback, product.photoLimit);
@@ -540,6 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (group === 'cristal-complement') {
         cristalLoveOptions.hidden = value !== 'frase-love';
+        if (!cristalLoveOptions.hidden) animatePreviewEntry(cristalLoveOptions);
         if (value !== 'frase-love') {
           resetCristalChoice('cristal-love-mode');
           resetCristalChoice('cristal-love-preset');
@@ -555,6 +624,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cristalLoveCount.textContent = '0';
         cristalLovePresetChoices.hidden = value !== 'predeterminada';
         cristalLoveCustomField.hidden = value !== 'personalizada';
+        if (!cristalLovePresetChoices.hidden) animatePreviewEntry(cristalLovePresetChoices);
+        if (!cristalLoveCustomField.hidden) animatePreviewEntry(cristalLoveCustomField);
       }
     });
   });
@@ -590,6 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audioPlayer.src = audioPreviewUrl;
     audioPlayer.load();
     audioPreview.hidden = false;
+    animatePreviewEntry(audioPreview);
     audioUploadArea.hidden = true;
     audioFeedback.textContent = `Audio listo: ${file.name} (${formatFileSize(file.size)}). Se almacenará al agregar el producto.`;
     if (product.isLuna) updateLunaProgress();
@@ -643,6 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const audioSelected = selectedPortraitSongMode === 'audio';
       portraitSongLinkField.hidden = audioSelected;
       portraitAudioMount.hidden = !audioSelected;
+      if (audioSelected) animatePreviewEntry(portraitAudioMount);
       audioInput.required = audioSelected;
       if (audioSelected) {
         portraitSongLink.value = '';
@@ -752,8 +825,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPhotoSlots(lunaPhotoGrid, lunaPhotoFiles, lunaPhotoPreviewUrls, lunaPhotoFeedback, photoLimit, updateLunaProgress);
     document.getElementById('lunaPhotoRequirement').textContent = `Carga ${photoLimit === 1 ? '1 fotografía' : 'las 2 fotografías'} para continuar.`;
     lunaFlow.hidden = false;
+    animatePreviewEntry(lunaFlow);
     document.getElementById('quantityStep').hidden = false;
     lunaQrStep.hidden = size === 'esencial';
+    if (!lunaQrStep.hidden) animatePreviewEntry(lunaQrStep);
 
     if (size === 'esencial') {
       lunaQrChoices.hidden = true;
@@ -770,14 +845,14 @@ document.addEventListener('DOMContentLoaded', () => {
         : 'Elige la canción que quieres dedicar';
       lunaQrHint.textContent = product.id === 'lunas-eco'
         ? 'Obligatorio: selecciona una sola opción.'
-        : 'Nombre o link de la canción.';
+        : 'Nombre o enlace de la canción.';
       lunaQrChoices.hidden = product.id !== 'lunas-eco';
       lunaAudioMount.hidden = true;
       lunaSongMount.hidden = product.id === 'lunas-eco';
       songInput.type = product.id === 'lunas-eco' ? 'url' : 'text';
       songInput.placeholder = product.id === 'lunas-eco'
-        ? 'Pega el link de la canción'
-        : 'Nombre o link de la canción';
+        ? 'Pega el enlace de la canción'
+        : 'Nombre o enlace de la canción';
       lunaBaseAddonOption.hidden = true;
       lunaBaseField.hidden = false;
       document.getElementById('lunaBaseHint').textContent = 'Obligatorio · incluida en esta talla · máximo 30 caracteres.';
@@ -806,6 +881,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isAudioOption = selectedLunaQrOption === 'audio';
         lunaAudioMount.hidden = !isAudioOption;
         lunaSongMount.hidden = isAudioOption;
+        animatePreviewEntry(isAudioOption ? lunaAudioMount : lunaSongMount);
         audioInput.required = isAudioOption;
         songInput.required = selectedLunaQrOption === 'song-link';
         if (isAudioOption) {
@@ -819,6 +895,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     lunaBaseAddonToggle.addEventListener('change', () => {
       lunaBaseField.hidden = !lunaBaseAddonToggle.checked;
+      if (!lunaBaseField.hidden) animatePreviewEntry(lunaBaseField);
       lunaBaseText.setAttribute('aria-required', String(lunaBaseAddonToggle.checked));
       if (!lunaBaseAddonToggle.checked) {
         lunaBaseText.value = '';
@@ -860,12 +937,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (selectedLunaQrOption === 'audio' && !selectedAudioFile) return 'Carga el audio o latido para tu QR.';
       if (selectedLunaQrOption === 'song-link') {
         const value = songInput.value.trim();
-        if (!value) return 'Escribe el link de la canción para tu QR.';
+        if (!value) return 'Escribe el enlace de la canción para tu QR.';
         try {
           const link = new URL(value);
           if (!['http:', 'https:'].includes(link.protocol)) throw new Error('URL inválida');
         } catch (error) {
-          return 'Escribe un link válido que comience con http:// o https://.';
+          return 'Escribe un enlace válido que comience con http:// o https://.';
         }
       }
     }
@@ -976,7 +1053,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!dedication) return 'Escribe la dedicatoria para continuar.';
 
     if (product.portraitType === 'box-musical' || product.portraitType === 'box-aniversario') {
-      if (!document.getElementById('portraitSongInput').value.trim()) return 'Escribe el nombre o link de la canción.';
+      if (!document.getElementById('portraitSongInput').value.trim()) return 'Escribe el nombre o enlace de la canción.';
     }
     if (product.portraitType === 'box-aniversario') {
       const firstName = document.getElementById('portraitNameOne').value.trim();
@@ -1001,17 +1078,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (product.portraitType === 'amore-mio') {
       if (selectedPortraitSongMode === 'link') {
         const linkValue = portraitSongLink.value.trim();
-        if (!linkValue) return 'Pega el link de la canción.';
+        if (!linkValue) return 'Pega el enlace de la canción.';
         try {
           const link = new URL(linkValue);
           if (!['http:', 'https:'].includes(link.protocol)) throw new Error('URL inválida');
         } catch (error) {
-          return 'Escribe un link válido que comience con http:// o https://.';
+          return 'Escribe un enlace válido que comience con http:// o https://.';
         }
       } else if (selectedPortraitSongMode === 'audio') {
         if (!selectedAudioFile) return 'Sube el archivo de audio de la canción.';
       } else {
-        return 'Elige si compartirás el link o subirás un audio.';
+        return 'Elige si compartirás el enlace o subirás un audio.';
       }
     }
     return '';
@@ -1087,7 +1164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const shippingValidation = validateShippingData();
     if (shippingValidation) {
       shippingFeedback.textContent = shippingValidation.message;
-      shippingValidation.field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      shippingValidation.field.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'center' });
       shippingValidation.field.focus({ preventScroll: true });
       return;
     }
@@ -1147,7 +1224,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
       }
       if (product.isCristalLove) {
-        const messageOption = cristalChoices['cristal-message'];
+        const messageOptionId = cristalChoices['cristal-message'];
+        const messagePhrase = cristalMessagesByTheme[product.theme]?.[Number(messageOptionId) - 1] || '';
         const selectedBase = cristalChoices['cristal-base'];
         const baseLabels = { rojo: 'Rojo', lila: 'Lila', 'beige-arequipe': 'Beige arequipe' };
         const complementId = cristalChoices['cristal-complement'];
@@ -1157,7 +1235,11 @@ document.addEventListener('DOMContentLoaded', () => {
           theme: product.theme,
           photoLimit: product.photoLimit,
           photos: references.photos,
-          messageOption: { id: messageOption, label: `Opción ${messageOption}`, contentPending: true },
+          messageOption: {
+            id: messageOptionId,
+            label: `Opción ${messageOptionId}`,
+            phrase: messagePhrase
+          },
           dedication: cristalDedication.value.trim(),
           baseColor: { id: selectedBase, label: baseLabels[selectedBase] },
           complement: complementId === 'vela'
