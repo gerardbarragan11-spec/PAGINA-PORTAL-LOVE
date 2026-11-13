@@ -283,7 +283,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (catalogGrid) {
-    const orderedCollections = [...catalogCollections].sort((first, second) => Number(Boolean(second.featured)) - Number(Boolean(first.featured)));
+    const categoryOrder = { lunas: 0, acrilicos: 1 };
+    const orderedCollections = [...catalogCollections].sort((first, second) => {
+      const priorityDifference = (categoryOrder[first.category] ?? 2) - (categoryOrder[second.category] ?? 2);
+      if (priorityDifference !== 0) return priorityDifference;
+      return Number(Boolean(second.featured)) - Number(Boolean(first.featured));
+    });
     orderedCollections.forEach(collection => catalogGrid.append(createCollectionCard(collection)));
   }
   const collectionVideos = catalogGrid ? Array.from(catalogGrid.querySelectorAll('.collection-video')) : [];
