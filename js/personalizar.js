@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'Amor feliz aniversario.',
       'Hogar es donde estoy contigo.',
       'Juntos todo es mejor.',
-      'Siempre tu y yo.',
+      'Siempre tú y yo.',
       'Suerte es tenerte en mi vida.'
     ],
     Amistad: [
