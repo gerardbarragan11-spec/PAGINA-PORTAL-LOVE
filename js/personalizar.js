@@ -112,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cristalIncludedBenefit = document.getElementById('cristalIncludedBenefit');
     cristalIncludedBenefit.hidden = !hasIncludedCandle;
     document.getElementById('cristalComplementStep').hidden = hasIncludedCandle;
-    document.getElementById('cristalLovePhraseStepNumber').textContent = hasIncludedCandle ? '5' : '6';
     document.getElementById('cristalVelaComplementPrice').textContent = `Agregar por ${window.PORTALOVERS_FORMAT_COP(product.cristalCandleAddonPrice)}`;
     if (hasIncludedCandle) {
       document.getElementById('cristalIncludedBenefitText').textContent = product.includedBenefit.label;
@@ -311,7 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { kind: 'card', text: 'Dedicatoria para la tarjeta impresa (máximo 150 caracteres).' },
         { kind: 'color', text: 'Base en el color seleccionado.' },
         { kind: 'candle', text: candleItem },
-        { kind: 'detail', text: 'Opción de personalizar una Frase Love.' },
         { kind: 'gift', text: 'Caja especial de regalo.' }
       ]
     };
@@ -752,18 +750,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function resetCristalChoice(group) {
-    document.querySelectorAll(`#cristalCustomization [data-choice-group="${group}"]`).forEach(button => {
-      button.classList.remove('is-selected');
-      button.setAttribute('aria-pressed', 'false');
-    });
-    delete cristalChoices[group];
-  }
-
-  const cristalLovePresetChoices = document.getElementById('cristalLovePresetChoices');
-  const cristalLoveCustomField = document.getElementById('cristalLoveCustomField');
-  const cristalLoveText = document.getElementById('cristalLoveText');
-  const cristalLoveCount = document.getElementById('cristalLoveCount');
   const cristalDedication = document.getElementById('cristalDedication');
   const cristalDedicationCount = document.getElementById('cristalDedicationCount');
   const previewPrice = document.getElementById('previewPrice');
@@ -789,23 +775,11 @@ document.addEventListener('DOMContentLoaded', () => {
       else delete cristalChoices[group];
 
       if (group === 'cristal-addon') updateCristalPrice();
-      if (group === 'cristal-love-mode') {
-        resetCristalChoice('cristal-love-preset');
-        cristalLoveText.value = '';
-        cristalLoveCount.textContent = '0';
-        cristalLovePresetChoices.hidden = value !== 'predeterminada';
-        cristalLoveCustomField.hidden = value !== 'personalizada';
-        if (!cristalLovePresetChoices.hidden) animatePreviewEntry(cristalLovePresetChoices);
-        if (!cristalLoveCustomField.hidden) animatePreviewEntry(cristalLoveCustomField);
-      }
     });
   });
 
   cristalDedication.addEventListener('input', () => {
     cristalDedicationCount.textContent = cristalDedication.value.length;
-  });
-  cristalLoveText.addEventListener('input', () => {
-    cristalLoveCount.textContent = cristalLoveText.value.length;
   });
 
   function handleAudioSelection(file) {
@@ -1176,15 +1150,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cristalChoices['cristal-message']) return 'Selecciona una opción en “Elige tu mensaje”.';
     if (cristalDedication.value.length > 150) return 'La dedicatoria no puede superar los 150 caracteres.';
     if (!cristalChoices['cristal-base']) return 'Selecciona el color de la base.';
-    if (cristalChoices['cristal-love-mode']) {
-      if (cristalChoices['cristal-love-mode'] === 'predeterminada' && !cristalChoices['cristal-love-preset']) {
-        return 'Selecciona una opción predeterminada de Frase Love.';
-      }
-      if (cristalChoices['cristal-love-mode'] === 'personalizada' && !cristalLoveText.value.trim()) {
-        return 'Escribe tu frase Love personalizada.';
-      }
-      if (cristalLoveText.value.length > 30) return 'La frase Love no puede superar los 30 caracteres.';
-    }
     return '';
   }
 
@@ -1353,7 +1318,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const messagePhrase = cristalMessagesByTheme[product.theme]?.[Number(messageOptionId) - 1] || '';
         const selectedBase = cristalChoices['cristal-base'];
         const baseLabels = { rojo: 'Rojo', lila: 'Lila', 'beige-arequipe': 'Beige arequipe' };
-        const lovePhraseMode = cristalChoices['cristal-love-mode'];
         customization.cristalLove = {
           variantId: product.id,
           variant: product.variantLabel,
@@ -1370,16 +1334,7 @@ document.addEventListener('DOMContentLoaded', () => {
           includedBenefit: product.includedBenefit,
           complement: cristalChoices['cristal-addon'] === 'vela'
             ? { id: 'vela', label: 'Vela de corazón tejido con aroma', cost: product.cristalCandleAddonPrice }
-            : null,
-          lovePhrase: !lovePhraseMode
-            ? null
-            : lovePhraseMode === 'predeterminada'
-                ? {
-                  mode: 'predeterminada',
-                  option: cristalChoices['cristal-love-preset'],
-                  contentPending: true
-                }
-                : { mode: 'personalizada', text: cristalLoveText.value.trim() }
+            : null
         };
       }
       if (product.isPortrait) {
