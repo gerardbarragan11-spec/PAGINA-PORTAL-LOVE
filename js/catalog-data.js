@@ -7,7 +7,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     featured: true,
     contactOnly: true,
     video: 'assets/images/LUNAS/LUNAS EVENTOS/En Portal Love nos sentimos orgullosos de haber sido parte del 6º Congreso de Medicina Interna, .mp4',
-    inquiryMessage: 'Hola, estoy interesado/a en cotizar un pedido de Lunas para un evento. Me gustaría recibir información sobre las opciones disponibles',
+    inquiryMessage: 'Hola, quiero cotizar un pedido de Lunas para un evento. Me gustaría recibir información sobre las opciones disponibles.',
     images: Object.freeze([])
   }),
   Object.freeze({
@@ -20,6 +20,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     theme: 'Amistad',
     photoLimit: 4,
     isCristalLove: true,
+    cristalCandleAddonPrice: 9900,
     images: Object.freeze(['assets/images/ACRILICOS/ACRI2.JPG'])
   }),
   Object.freeze({
@@ -49,11 +50,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     theme: 'Amor',
     photoLimit: 2,
     isCristalLove: true,
-    includedBenefit: Object.freeze({
-      label: 'Incluye una vela de corazón tejido con aroma sin costo adicional',
-      item: 'Vela de corazón tejido con aroma',
-      cost: 0
-    }),
+    cristalCandleAddonPrice: 9900,
     images: Object.freeze(['assets/images/ACRILICOS/ACRI3.jpg'])
   }),
   Object.freeze({
@@ -142,7 +139,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
       'Portarretrato 19,5 cm x 14,5 cm (con protector de vidrio).',
       '4 fotografías.',
       '4 chocolates Ferrero Rocher.',
-      'Nombre tuyo y el de tu pareja.',
+      'Tu nombre y el de tu pareja.',
       'Canción a dedicar mediante QR desde Spotify.',
       'Calendario con fecha de aniversario.',
       'Frase corta en el portarretrato.',
@@ -181,7 +178,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     categoryName: 'Velas Baby',
     title: 'Velas Baby',
     contactOnly: true,
-    inquiryMessage: 'Hola, estoy interesado/a en cotizar Velas Baby para mi evento. Me gustaría recibir información sobre las opciones disponibles',
+    inquiryMessage: 'Hola, quiero cotizar Velas Baby para mi evento. Me gustaría recibir información sobre las opciones disponibles.',
     images: Object.freeze([
       'assets/images/VELAS/VELASBABY.JPG',
       'assets/images/VELAS/VELASBABY4.JPG',

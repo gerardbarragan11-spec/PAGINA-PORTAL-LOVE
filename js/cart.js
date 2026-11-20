@@ -26,11 +26,30 @@ const Cart = {
           const price = Number.isFinite(configuredPrice)
             ? configuredPrice
             : Number.isFinite(item.price) ? item.price : null;
+          const cristalLove = customization.cristalLove;
+          const savedComplement = cristalLove?.complement;
+          const normalizedCristalLove = cristalLove && collection
+            ? {
+              ...cristalLove,
+              includedBenefit: collection.includedBenefit || null,
+              complement: savedComplement?.id === 'vela' && !collection.includedBenefit
+                ? {
+                  ...savedComplement,
+                  label: 'Vela de corazón tejido con aroma',
+                  cost: collection.cristalCandleAddonPrice
+                }
+                : null,
+              lovePhrase: cristalLove.lovePhrase
+                || (savedComplement?.id === 'frase-love' ? savedComplement.phrase : null)
+            }
+            : cristalLove;
           return {
             ...item,
             price,
             priceOnRequest: !Number.isFinite(price) && item.priceOnRequest === true,
-            customization
+            customization: normalizedCristalLove
+              ? { ...customization, cristalLove: normalizedCristalLove }
+              : customization
           };
         });
     } catch (e) {
@@ -86,7 +105,10 @@ const Cart = {
       const baseAddon = Number.isFinite(item.customization.luna?.base?.addonPrice)
         ? item.customization.luna.base.addonPrice * item.quantity
         : 0;
-      return sum + productTotal + baseAddon;
+      const cristalCandleAddon = Number.isFinite(item.customization.cristalLove?.complement?.cost)
+        ? item.customization.cristalLove.complement.cost * item.quantity
+        : 0;
+      return sum + productTotal + baseAddon + cristalCandleAddon;
     }, 0);
   },
 
@@ -229,14 +251,14 @@ const Cart = {
           if (cristalLove.includedBenefit?.item && cristalLove.includedBenefit.cost === 0) {
             customHTML += `<span>Incluido sin costo adicional: ${this.escapeHTML(cristalLove.includedBenefit.item)}</span>`;
           }
-          if (cristalLove.complement?.label) {
-            customHTML += `<span>Complemento sin costo: ${this.escapeHTML(cristalLove.complement.label)}</span>`;
-            const lovePhrase = cristalLove.complement.phrase;
-            if (lovePhrase?.mode === 'predeterminada') {
-              customHTML += `<span>Frase Love: Opción ${this.escapeHTML(lovePhrase.option)} (frase pendiente de definir)</span>`;
-            } else if (lovePhrase?.mode === 'personalizada' && lovePhrase.text) {
-              customHTML += `<span class="cart-cristal-detail">Frase Love: ${this.escapeHTML(lovePhrase.text)}</span>`;
-            }
+          if (cristalLove.complement?.id === 'vela') {
+            customHTML += `<span>Complemento adicional: ${this.escapeHTML(cristalLove.complement.label)} · ${window.PORTALOVERS_FORMAT_COP(cristalLove.complement.cost)}</span>`;
+          }
+          const lovePhrase = cristalLove.lovePhrase;
+          if (lovePhrase?.mode === 'predeterminada') {
+            customHTML += `<span>Frase Love: Opción ${this.escapeHTML(lovePhrase.option)} (frase pendiente de definir)</span>`;
+          } else if (lovePhrase?.mode === 'personalizada' && lovePhrase.text) {
+            customHTML += `<span class="cart-cristal-detail">Frase Love: ${this.escapeHTML(lovePhrase.text)}</span>`;
           }
         }
         const luna = customization.luna;
@@ -247,7 +269,7 @@ const Cart = {
               customHTML += `<a class="cart-reference-link" href="${this.escapeHTML(photo.url)}" target="_blank" rel="noopener noreferrer">Foto ${photoIndex + 1}: ${this.escapeHTML(photo.name)}</a>`;
             }
           });
-          if (luna.qr?.option === 'audio') customHTML += '<span>QR: Audio o latido del corazón</span>';
+          if (luna.qr?.option === 'audio') customHTML += '<span>QR: audio o latidos del corazón</span>';
           if (luna.qr?.option === 'song-link' && luna.qr.songLink) {
             customHTML += `<span>QR: ${this.escapeHTML(luna.qr.songLink)}</span>`;
           }
@@ -401,10 +423,11 @@ const Cart = {
           message += `🎁 Incluido sin costo adicional: ${cristalLove.includedBenefit.item}\n`;
         }
         if (cristalLove.complement?.id === 'vela') {
-          message += '🎁 Complemento sin costo adicional: Vela de corazón tejido\n';
-        } else if (cristalLove.complement?.id === 'frase-love') {
-          message += '🎁 Complemento sin costo adicional: Frase Love\n';
-          const lovePhrase = cristalLove.complement.phrase;
+          const addonPrice = cristalLove.complement.cost;
+          message += `🕯️ Complemento adicional: ${cristalLove.complement.label} · $${addonPrice.toLocaleString('es-CO')} COP x ${item.quantity} = $${(addonPrice * item.quantity).toLocaleString('es-CO')} COP\n`;
+        }
+        const lovePhrase = cristalLove.lovePhrase;
+        if (lovePhrase) {
           if (lovePhrase?.mode === 'predeterminada') {
             message += `💬 Frase Love: Opción ${lovePhrase.option} (frase pendiente de definir)\n`;
           } else if (lovePhrase?.mode === 'personalizada') {
@@ -418,7 +441,7 @@ const Cart = {
         (Array.isArray(luna.photos) ? luna.photos : []).forEach((photo, photoIndex) => {
           if (photo?.url) message += `📸 Foto ${photoIndex + 1}: ${photo.url}\n`;
         });
-        if (luna.qr?.option === 'audio') message += '🔊 QR: Audio o latido del corazón del bebé\n';
+        if (luna.qr?.option === 'audio') message += '🔊 QR: audio o latidos del corazón del bebé\n';
         if (luna.qr?.option === 'song-link') message += `🔗 Enlace del QR: ${luna.qr.songLink}\n`;
         if (luna.qr?.option === 'song' && luna.qr.song) message += `🎵 Canción: ${luna.qr.song}\n`;
         if (luna.dedication) message += `✍️ Dedicatoria grabada: ${luna.dedication}\n`;

@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
       portraitType: collection.portraitType || '',
       isPortrait: Boolean(collection.portraitType),
       includedBenefit: collection.includedBenefit || null,
+      cristalCandleAddonPrice: Number.isFinite(collection.cristalCandleAddonPrice) ? collection.cristalCandleAddonPrice : 0,
       setIncludes: collection.setIncludes || [],
       variantLabel: collection.variantLabel || '',
       theme: collection.theme || '',
@@ -110,7 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const hasIncludedCandle = product.includedBenefit?.item === 'Vela de corazón tejido con aroma';
     const cristalIncludedBenefit = document.getElementById('cristalIncludedBenefit');
     cristalIncludedBenefit.hidden = !hasIncludedCandle;
-    document.getElementById('cristalVelaComplement').hidden = hasIncludedCandle;
+    document.getElementById('cristalComplementStep').hidden = hasIncludedCandle;
+    document.getElementById('cristalLovePhraseStepNumber').textContent = hasIncludedCandle ? '5' : '6';
+    document.getElementById('cristalVelaComplementPrice').textContent = `Agregar por ${window.PORTALOVERS_FORMAT_COP(product.cristalCandleAddonPrice)}`;
     if (hasIncludedCandle) {
       document.getElementById('cristalIncludedBenefitText').textContent = product.includedBenefit.label;
     }
@@ -297,6 +300,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function getCristalLoveSet() {
     const isAmigos = product.theme === 'Amistad';
+    const candleItem = product.includedBenefit
+      ? 'Vela de corazón tejido con aroma incluida sin costo adicional.'
+      : `Opción de agregar una vela de corazón tejido con aroma por $${product.cristalCandleAddonPrice.toLocaleString('es-CO')} COP.`;
     return {
       title: `Nuestro Cristal Love ${isAmigos ? 'Amigos' : 'Amor'} incluye`,
       items: [
@@ -304,9 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { kind: 'message', text: 'Elección de un mensaje predeterminado.' },
         { kind: 'card', text: 'Dedicatoria para la tarjeta impresa (máximo 150 caracteres).' },
         { kind: 'color', text: 'Base en el color seleccionado.' },
-        isAmigos
-          ? { kind: 'candle', text: 'Opción de agregar una vela de corazón tejido con aroma sin costo adicional.' }
-          : { kind: 'candle', text: 'Vela de corazón tejido con aroma incluida sin costo adicional.' },
+        { kind: 'candle', text: candleItem },
         { kind: 'detail', text: 'Opción de personalizar una Frase Love.' },
         { kind: 'gift', text: 'Caja especial de regalo.' }
       ]
@@ -318,15 +322,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const isEssential = size === 'esencial';
     const photoCount = size === 'premium' ? 2 : 1;
     const qrText = product.lunaType === 'eco'
-      ? 'Código QR con audio o latido del corazón de tu bebé, o enlace de una canción.'
-      : 'Canción dedicada mediante código QR.';
+      ? 'Código QR con un audio, los latidos del corazón de tu bebé o una canción.'
+      : 'Canción dedicada mediante un código QR.';
     const items = [
       { kind: 'photo', text: `${photoCount} ${photoCount === 1 ? 'fotografía personalizada.' : 'fotografías personalizadas.'}` }
     ];
     if (!isEssential) items.push({ kind: 'qr', text: qrText });
     items.push({ kind: 'dedication', text: 'Dedicatoria grabada en la lámpara.' });
     items.push(isEssential
-      ? { kind: 'base', text: 'Opción de agregar base personalizada por $15.000 COP.' }
+      ? { kind: 'base', text: 'Opción de agregar una base personalizada por $15.000 COP.' }
       : { kind: 'base', text: 'Base personalizada.' });
     items.push({ kind: 'card', text: 'Tarjeta impresa personalizada.' });
     items.push({ kind: 'gift', text: 'Caja especial de regalo.' });
@@ -558,7 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     if (file.size === 0 || file.size > 5 * 1024 * 1024) {
-      uploadFeedback.textContent = file.size === 0 ? 'El archivo está vacío.' : 'La imagen supera el máximo de 5 MB.';
+      uploadFeedback.textContent = file.size === 0 ? 'El archivo está vacío.' : 'La imagen supera el límite de 5 MB.';
       imageInput.value = '';
       return;
     }
@@ -691,7 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
         if (file.size === 0 || file.size > 5 * 1024 * 1024) {
-          updateFeedback(file.size === 0 ? 'El archivo está vacío.' : 'Cada fotografía debe pesar máximo 5 MB.');
+          updateFeedback(file.size === 0 ? 'El archivo está vacío.' : 'Cada fotografía debe pesar como máximo 5 MB.');
           input.value = '';
           return;
         }
@@ -756,36 +760,35 @@ document.addEventListener('DOMContentLoaded', () => {
     delete cristalChoices[group];
   }
 
-  const cristalLoveOptions = document.getElementById('cristalLoveOptions');
   const cristalLovePresetChoices = document.getElementById('cristalLovePresetChoices');
   const cristalLoveCustomField = document.getElementById('cristalLoveCustomField');
   const cristalLoveText = document.getElementById('cristalLoveText');
   const cristalLoveCount = document.getElementById('cristalLoveCount');
   const cristalDedication = document.getElementById('cristalDedication');
   const cristalDedicationCount = document.getElementById('cristalDedicationCount');
+  const previewPrice = document.getElementById('previewPrice');
+
+  function updateCristalPrice() {
+    const addonPrice = cristalChoices['cristal-addon'] === 'vela' ? product.cristalCandleAddonPrice : 0;
+    const totalPrice = product.price + addonPrice;
+    previewPrice.textContent = addonPrice
+      ? `${window.PORTALOVERS_FORMAT_COP(totalPrice)} (incluye ${window.PORTALOVERS_FORMAT_COP(addonPrice)} por la vela adicional)`
+      : window.PORTALOVERS_FORMAT_COP(product.price);
+  }
 
   document.querySelectorAll('#cristalCustomization [data-choice-group]').forEach(button => {
     button.addEventListener('click', () => {
       const { choiceGroup: group, value } = button.dataset;
+      const selected = group !== 'cristal-addon' || !button.classList.contains('is-selected');
       document.querySelectorAll(`#cristalCustomization [data-choice-group="${group}"]`).forEach(option => {
-        const selected = option === button;
-        option.classList.toggle('is-selected', selected);
-        option.setAttribute('aria-pressed', String(selected));
+        const isSelected = option === button && selected;
+        option.classList.toggle('is-selected', isSelected);
+        option.setAttribute('aria-pressed', String(isSelected));
       });
-      cristalChoices[group] = value;
+      if (selected) cristalChoices[group] = value;
+      else delete cristalChoices[group];
 
-      if (group === 'cristal-complement') {
-        cristalLoveOptions.hidden = value !== 'frase-love';
-        if (!cristalLoveOptions.hidden) animatePreviewEntry(cristalLoveOptions);
-        if (value !== 'frase-love') {
-          resetCristalChoice('cristal-love-mode');
-          resetCristalChoice('cristal-love-preset');
-          cristalLoveText.value = '';
-          cristalLoveCount.textContent = '0';
-          cristalLovePresetChoices.hidden = true;
-          cristalLoveCustomField.hidden = true;
-        }
-      }
+      if (group === 'cristal-addon') updateCristalPrice();
       if (group === 'cristal-love-mode') {
         resetCristalChoice('cristal-love-preset');
         cristalLoveText.value = '';
@@ -815,7 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     if (file.size === 0 || file.size > 15 * 1024 * 1024) {
-      audioFeedback.textContent = file.size === 0 ? 'El archivo está vacío.' : 'El audio supera el máximo de 15 MB.';
+      audioFeedback.textContent = file.size === 0 ? 'El archivo está vacío.' : 'El audio supera el límite de 15 MB.';
       audioInput.value = '';
       return;
     }
@@ -993,7 +996,7 @@ document.addEventListener('DOMContentLoaded', () => {
         : 'Nombre o enlace de la canción';
       lunaBaseAddonOption.hidden = true;
       lunaBaseField.hidden = false;
-      document.getElementById('lunaBaseHint').textContent = 'Obligatorio · incluida en esta talla · máximo 30 caracteres.';
+      document.getElementById('lunaBaseHint').textContent = 'La base está incluida en esta talla. El texto es obligatorio y no puede superar los 30 caracteres.';
       lunaBaseText.setAttribute('aria-required', 'true');
       lunaBaseTextLabel.textContent = 'Texto para la base (obligatorio)';
     }
@@ -1074,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (selectedLunaSize !== 'esencial' && product.id === 'lunas-eco') {
       if (!selectedLunaQrOption) return 'Selecciona una opción para tu QR.';
-      if (selectedLunaQrOption === 'audio' && !selectedAudioFile) return 'Carga el audio o latido para tu QR.';
+      if (selectedLunaQrOption === 'audio' && !selectedAudioFile) return 'Carga el audio o el latido del corazón para tu QR.';
       if (selectedLunaQrOption === 'song-link') {
         const value = songInput.value.trim();
         if (!value) return 'Escribe el enlace de la canción para tu QR.';
@@ -1173,9 +1176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cristalChoices['cristal-message']) return 'Selecciona una opción en “Elige tu mensaje”.';
     if (cristalDedication.value.length > 150) return 'La dedicatoria no puede superar los 150 caracteres.';
     if (!cristalChoices['cristal-base']) return 'Selecciona el color de la base.';
-    if (!cristalChoices['cristal-complement']) return 'Selecciona un complemento sin costo adicional.';
-    if (cristalChoices['cristal-complement'] === 'frase-love') {
-      if (!cristalChoices['cristal-love-mode']) return 'Elige una modalidad para Frase Love.';
+    if (cristalChoices['cristal-love-mode']) {
       if (cristalChoices['cristal-love-mode'] === 'predeterminada' && !cristalChoices['cristal-love-preset']) {
         return 'Selecciona una opción predeterminada de Frase Love.';
       }
@@ -1352,7 +1353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const messagePhrase = cristalMessagesByTheme[product.theme]?.[Number(messageOptionId) - 1] || '';
         const selectedBase = cristalChoices['cristal-base'];
         const baseLabels = { rojo: 'Rojo', lila: 'Lila', 'beige-arequipe': 'Beige arequipe' };
-        const complementId = cristalChoices['cristal-complement'];
+        const lovePhraseMode = cristalChoices['cristal-love-mode'];
         customization.cristalLove = {
           variantId: product.id,
           variant: product.variantLabel,
@@ -1367,20 +1368,18 @@ document.addEventListener('DOMContentLoaded', () => {
           dedication: cristalDedication.value.trim(),
           baseColor: { id: selectedBase, label: baseLabels[selectedBase] },
           includedBenefit: product.includedBenefit,
-          complement: complementId === 'vela'
-            ? { id: 'vela', label: 'Vela de corazón tejido', cost: 0 }
-            : {
-              id: 'frase-love',
-              label: 'Frase Love',
-              cost: 0,
-              phrase: cristalChoices['cristal-love-mode'] === 'predeterminada'
+          complement: cristalChoices['cristal-addon'] === 'vela'
+            ? { id: 'vela', label: 'Vela de corazón tejido con aroma', cost: product.cristalCandleAddonPrice }
+            : null,
+          lovePhrase: !lovePhraseMode
+            ? null
+            : lovePhraseMode === 'predeterminada'
                 ? {
                   mode: 'predeterminada',
                   option: cristalChoices['cristal-love-preset'],
                   contentPending: true
                 }
                 : { mode: 'personalizada', text: cristalLoveText.value.trim() }
-            }
         };
       }
       if (product.isPortrait) {
@@ -1423,8 +1422,9 @@ document.addEventListener('DOMContentLoaded', () => {
         customization
       };
       const baseAddon = customization.luna?.base?.addonPrice || 0;
+      const cristalCandleAddon = customization.cristalLove?.complement?.cost || 0;
       const orderItemTotal = Number.isFinite(item.price)
-        ? (item.price + baseAddon) * item.quantity
+        ? (item.price + baseAddon + cristalCandleAddon) * item.quantity
         : null;
 
       if (!Cart.addItem(item)) {
