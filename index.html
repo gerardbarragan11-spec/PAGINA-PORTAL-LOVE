@@ -30,7 +30,6 @@
           <li><a href="#inicio" class="nav-link">Inicio</a></li>
           <li><a href="#catalogo" class="nav-link">Catálogo</a></li>
           <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
-          <li><a href="#blog" class="nav-link">Blog</a></li>
           <li><a href="#testimonios" class="nav-link">Testimonios</a></li>
           <li><a href="#contacto" class="nav-link">Contacto</a></li>
         </ul>
@@ -151,96 +150,6 @@
       <p>Entregamos una <em>experiencia.</em></p>
     </div>
   </section>
-
-  <!-- Blog -->
-  <section id="blog" class="section blog" style="background: var(--white);">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Blog</h2>
-        <p class="section-subtitle">Inspiración para tus regalos</p>
-      </div>
-      <div class="blog-grid">
-        <a class="blog-card reveal" href="#blog" data-article-id="aniversario" aria-haspopup="dialog" aria-controls="articleDialog">
-          <div class="blog-image">
-            <img src="assets/images/blog_1.png" alt="Lámpara, portarretrato y detalles para celebrar un aniversario" loading="lazy" decoding="async">
-          </div>
-          <div class="blog-content">
-            <div class="blog-meta">
-              <span>Inspiración</span>
-              <span class="blog-reading-time" data-reading-for="aniversario">Lectura</span>
-            </div>
-            <h3 class="blog-title">Cinco ideas para un aniversario que cuentan algo real</h3>
-            <p class="blog-excerpt">Más que elegir un objeto, se trata de encontrar la forma de decir: me acuerdo de esto, y de nosotros.</p>
-            <span class="blog-link">Leer artículo <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-          </div>
-        </a>
-        <a class="blog-card reveal" href="#blog" data-article-id="lampara-luna" aria-haspopup="dialog" aria-controls="articleDialog">
-          <div class="blog-image">
-            <img src="assets/images/blog_2.png" alt="Sala de estar con iluminación cálida y velas" loading="lazy" decoding="async">
-          </div>
-          <div class="blog-content">
-            <div class="blog-meta">
-              <span>Detrás de escena</span>
-              <span class="blog-reading-time" data-reading-for="lampara-luna">Lectura</span>
-            </div>
-            <h3 class="blog-title">De una fotografía a una lámpara Luna: un recuerdo encuentra su lugar</h3>
-            <p class="blog-excerpt">Una imagen puede ser el comienzo. Te contamos cómo pensarla como referencia y qué esperar del ejemplo 3D.</p>
-            <span class="blog-link">Leer artículo <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <dialog class="article-dialog" id="articleDialog" aria-labelledby="articleTitle" aria-describedby="articleIntro" aria-modal="true">
-    <div class="article-reader" id="articleReader">
-      <div class="article-reader-bar">
-        <button class="article-back" id="articleBack" type="button">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Volver al blog
-        </button>
-        <a class="article-wordmark" href="#inicio" aria-label="Portalovers, ir al inicio" data-article-home-link>Portalovers</a>
-        <span class="article-bar-time" id="articleBarTime" aria-hidden="true"></span>
-        <div class="article-progress" aria-hidden="true"><span id="articleProgress"></span></div>
-      </div>
-      <div class="article-reader-scroll" id="articleReaderScroll">
-        <article class="article-document" id="articleDocument" tabindex="-1">
-          <header class="article-hero">
-            <img class="article-hero-img" id="articleImage" src="" alt="">
-            <div class="article-hero-inner">
-              <div class="article-meta"><span class="article-chip" id="articleCategory"></span><span class="article-meta-time" id="articleReadingTime"></span></div>
-              <h1 id="articleTitle" tabindex="-1"></h1>
-            </div>
-          </header>
-          <div class="article-layout">
-            <aside class="article-toc" aria-label="Contenido del artículo">
-              <p class="article-toc-title">En este artículo</p>
-              <ol id="articleToc"></ol>
-            </aside>
-            <div class="article-body">
-              <p class="article-lead" id="articleIntro"></p>
-              <div class="article-prose" id="articleSections"></div>
-            </div>
-          </div>
-          <footer class="article-ending">
-            <div class="article-ending-inner">
-              <span class="article-ending-kicker">Para llevar esta idea a la realidad</span>
-              <h2 id="articleClosingTitle"></h2>
-              <p id="articleClosing"></p>
-              <div class="article-products" id="articleProducts"></div>
-              <a class="btn btn-primary article-cta" id="articleCta" href="#catalogo" data-article-catalog-link></a>
-            </div>
-          </footer>
-          <section class="article-next" aria-labelledby="articleNextLabel">
-            <div class="article-next-inner">
-              <p class="article-next-label" id="articleNextLabel">Sigue leyendo</p>
-              <button class="article-next-card" id="articleNext" type="button"></button>
-            </div>
-          </section>
-        </article>
-      </div>
-    </div>
-  </dialog>
 
   <!-- Testimonials -->
   <section id="testimonios" class="section testimonials">
@@ -389,7 +298,6 @@
   <script src="js/cart.js"></script>
   <script src="js/catalog-data.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/blog.js"></script>
   <script>
     const hero = document.querySelector('.hero');
     const heroContent = document.querySelector('.hero-content');

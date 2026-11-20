@@ -94,9 +94,9 @@
                 <div><h3 id="lunaSizeTitle">Elige una opción</h3><p>Selecciona una talla para continuar.</p></div>
               </div>
               <div class="luna-size-options" role="group" aria-label="Tallas disponibles">
-                <button class="luna-size-card" type="button" data-luna-size="esencial" aria-pressed="false"><strong>Esencial</strong><span class="luna-size-price">Precio por cotizar</span></button>
-                <button class="luna-size-card" type="button" data-luna-size="plus" aria-pressed="false"><span class="luna-size-badge">La más pedida</span><strong>Plus</strong><span class="luna-size-price">Precio por cotizar</span></button>
-                <button class="luna-size-card" type="button" data-luna-size="premium" aria-pressed="false"><strong>Premium</strong><span class="luna-size-price">Precio por cotizar</span></button>
+                <button class="luna-size-card" type="button" data-luna-size="esencial" aria-pressed="false"><strong>Esencial</strong><span class="luna-size-dimension">11 cm de diámetro</span><span class="luna-size-price">Precio por cotizar</span></button>
+                <button class="luna-size-card" type="button" data-luna-size="plus" aria-pressed="false"><span class="luna-size-badge">La más pedida</span><strong>Plus</strong><span class="luna-size-dimension">13 cm de diámetro</span><span class="luna-size-price">Precio por cotizar</span></button>
+                <button class="luna-size-card" type="button" data-luna-size="premium" aria-pressed="false"><strong>Premium</strong><span class="luna-size-dimension">15 cm de diámetro</span><span class="luna-size-price">Precio por cotizar</span></button>
               </div>
               <p class="step-hint" id="lunaSizeFeedback" role="status" aria-live="polite">Elige una talla para empezar a personalizar.</p>
             </section>
@@ -221,6 +221,10 @@
           </section>
 
           <section class="portrait-customization" id="portraitCustomization" aria-label="Personalización de portarretratos" hidden>
+            <div class="portrait-progress" id="portraitProgress" role="progressbar" aria-label="Progreso de personalización de Box Musical" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0" hidden>
+              <span id="portraitProgressText">0 de 3 pasos completados</span>
+              <div class="portrait-progress-track"><span id="portraitProgressFill"></span></div>
+            </div>
             <div class="portrait-included-benefit" id="portraitIncludedBenefit" role="note" hidden>
               <span class="portrait-included-mark" aria-hidden="true">✓</span>
               <span id="portraitIncludedBenefitText"></span>
@@ -257,22 +261,6 @@
                 <label for="portraitMonth">Mes<input class="song-input portrait-text-input" id="portraitMonth" type="number" min="1" max="12" inputmode="numeric"></label>
                 <label for="portraitYear">Año<input class="song-input portrait-text-input" id="portraitYear" type="number" min="1" max="9999" inputmode="numeric"></label>
               </fieldset>
-            </section>
-
-            <section class="portrait-step" id="portraitAmoreStep" aria-labelledby="portraitAmoreTitle" hidden>
-              <div class="cristal-step-heading">
-                <span class="step-number">2</span>
-                <div><h3 id="portraitAmoreTitle">Elige cómo compartir tu canción</h3><p>Selecciona una sola modalidad.</p></div>
-              </div>
-              <div class="cristal-choice-grid cristal-complement-choices portrait-mode-choices" role="group" aria-label="Modalidad de canción">
-                <button class="cristal-choice-card" type="button" data-portrait-song-mode="link" aria-pressed="false">Compartir enlace</button>
-                <button class="cristal-choice-card" type="button" data-portrait-song-mode="audio" aria-pressed="false">Subir archivo de audio</button>
-              </div>
-              <div class="portrait-song-link" id="portraitSongLinkField" hidden>
-                <label for="portraitSongLink">Enlace de la canción</label>
-                <input class="song-input portrait-text-input" id="portraitSongLink" type="url" inputmode="url" placeholder="https://">
-              </div>
-              <div class="portrait-audio-mount" id="portraitAudioMount" hidden></div>
             </section>
 
             <section class="portrait-step" id="portraitDedicationStep" aria-labelledby="portraitDedicationTitle">

@@ -15,7 +15,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     category: 'acrilicos',
     categoryName: 'Cristal Love',
     title: 'Cristal Love – Amigos',
-    price: 45500,
+    price: 45000,
     variantLabel: 'Amigos',
     theme: 'Amistad',
     photoLimit: 4,
@@ -78,7 +78,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     categoryName: 'Lunas',
     title: 'Lunas Love',
     images: Object.freeze([
-      'assets/images/LUNAS/LUNAS LOVE/LUNALOVE.JPG',
+      'assets/images/LUNAS/LUNAS LOVE/PRINCIPAL.jpeg',
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE2.JPG',
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE4.JPG',
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE5.JPG',
@@ -92,10 +92,10 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     categoryName: 'Lunas',
     title: 'Lunas Mascotas',
     images: Object.freeze([
-      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM.jpg',
+      'assets/images/LUNAS/LUNAS MASCOTAS/PRINCIPAL.jpeg',
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM1.jpg',
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM3.jpg',
-      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM4.jpeg',
+      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM4.jpg',
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM5.jpg',
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM6.jpeg'
     ])
@@ -184,10 +184,13 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     inquiryMessage: 'Hola, estoy interesado/a en cotizar Velas Baby para mi evento. Me gustaría recibir información sobre las opciones disponibles',
     images: Object.freeze([
       'assets/images/VELAS/VELASBABY.JPG',
-      'assets/images/VELAS/WhatsApp Image 2026-11-13 at 4.25.12 PM.jpeg',
-      'assets/images/VELAS/WhatsApp Image 2026-11-13 at 4.25.13 PM.jpeg',
       'assets/images/VELAS/VELASBABY4.JPG',
-      'assets/images/VELAS/VELASBABY6.JPG'
+      'assets/images/VELAS/WhatsApp Image 2026-11-20 at 7.50.04 AM.jpeg',
+      'assets/images/VELAS/WhatsApp Image 2026-11-20 at 7.50.04 AM (1).jpeg',
+      'assets/images/VELAS/WhatsApp Image 2026-11-20 at 7.50.04 AM (2).jpeg',
+      'assets/images/VELAS/WhatsApp Image 2026-11-20 at 7.50.04 AM (3).jpeg',
+      'assets/images/VELAS/WhatsApp Image 2026-11-20 at 7.50.04 AM (4).jpeg',
+      'assets/images/VELAS/WhatsApp Image 2026-11-20 at 7.50.04 AM (5).jpeg'
     ])
   })
 ]);

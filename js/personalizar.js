@@ -126,17 +126,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const quantityStep = document.getElementById('quantityStep');
     const portraitSongStep = document.getElementById('portraitSongStep');
     const portraitAnniversaryStep = document.getElementById('portraitAnniversaryStep');
-    const portraitAmoreStep = document.getElementById('portraitAmoreStep');
+    const portraitDedicationStep = document.getElementById('portraitDedicationStep');
     const portraitCardStep = document.getElementById('portraitCardStep');
     const portraitCardMessage = document.getElementById('portraitCardMessage');
     const portraitCardMessageCount = document.getElementById('portraitCardMessageCount');
+    const portraitProgress = document.getElementById('portraitProgress');
     portraitCustomization.hidden = false;
     document.querySelectorAll('.customize-step').forEach(step => { step.hidden = step !== quantityStep; });
-    portraitSongStep.hidden = product.portraitType === 'amore-mio';
+    portraitSongStep.hidden = false;
     portraitAnniversaryStep.hidden = product.portraitType !== 'box-aniversario';
-    portraitAmoreStep.hidden = product.portraitType !== 'amore-mio';
+    portraitDedicationStep.hidden = product.portraitType === 'box-musical';
     portraitCardStep.hidden = false;
-    document.getElementById('portraitCardNumber').textContent = product.portraitType === 'box-aniversario' ? '5' : '4';
+    portraitProgress.hidden = product.portraitType !== 'box-musical';
+    document.getElementById('portraitCardNumber').textContent = product.portraitType === 'box-aniversario'
+      ? '5'
+      : product.portraitType === 'box-musical' ? '3' : '4';
+    if (product.portraitType === 'box-musical') {
+      document.getElementById('portraitPhotosTitle').textContent = 'Tus fotos favoritas';
+    }
+    if (product.portraitType === 'box-musical' || product.portraitType === 'amore-mio') {
+      document.getElementById('portraitSongTitle').textContent = 'Elige la canción que quieras dedicar';
+      document.getElementById('portraitSongInput').placeholder = 'Nombre o link de la canción';
+    }
     portraitCardMessage.addEventListener('input', () => {
       portraitCardMessageCount.textContent = portraitCardMessage.value.length;
     });
@@ -471,12 +482,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const lunaPhotoPreviewUrls = [];
   let selectedLunaSize = '';
   let selectedLunaQrOption = '';
-  let selectedPortraitSongMode = '';
   const cristalChoices = Object.create(null);
   const cristalPhotoGrid = document.getElementById('cristalPhotoGrid');
   const cristalPhotoFeedback = document.getElementById('cristalPhotoFeedback');
   const portraitPhotoGrid = document.getElementById('portraitPhotoGrid');
   const portraitPhotoFeedback = document.getElementById('portraitPhotoFeedback');
+  function updatePortraitProgress() {
+    if (product.portraitType !== 'box-musical') return;
+    const completedCount = [
+      portraitPhotoFiles.some(Boolean),
+      Boolean(document.getElementById('portraitSongInput').value.trim()),
+      Boolean(document.getElementById('portraitCardMessage').value.trim())
+    ].filter(Boolean).length;
+    document.getElementById('portraitProgress').setAttribute('aria-valuenow', String(completedCount));
+    document.getElementById('portraitProgressText').textContent = `${completedCount} de 3 pasos completados`;
+    document.getElementById('portraitProgressFill').style.width = `${completedCount / 3 * 100}%`;
+  }
   const lunaPhotoGrid = document.getElementById('lunaPhotoGrid');
   const lunaPhotoFeedback = document.getElementById('lunaPhotoFeedback');
   const lunaPricing = window.PORTALOVERS_LUNA_PRICING;
@@ -720,7 +741,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   if (product.isPortrait) {
-    renderPhotoSlots(portraitPhotoGrid, portraitPhotoFiles, portraitPhotoPreviewUrls, portraitPhotoFeedback, product.photoLimit);
+    renderPhotoSlots(portraitPhotoGrid, portraitPhotoFiles, portraitPhotoPreviewUrls, portraitPhotoFeedback, product.photoLimit, updatePortraitProgress);
+    if (product.portraitType === 'box-musical') {
+      document.getElementById('portraitSongInput').addEventListener('input', updatePortraitProgress);
+      document.getElementById('portraitCardMessage').addEventListener('input', updatePortraitProgress);
+    }
   }
 
   function resetCristalChoice(group) {
@@ -841,37 +866,6 @@ document.addEventListener('DOMContentLoaded', () => {
     audioInput.value = '';
     audioFeedback.textContent = 'MP3, WAV, M4A u OGG. Máximo 15 MB. Se almacenará al agregar el producto.';
     if (product.isLuna) updateLunaProgress();
-  });
-
-  const portraitSongLinkField = document.getElementById('portraitSongLinkField');
-  const portraitSongLink = document.getElementById('portraitSongLink');
-  const portraitAudioMount = document.getElementById('portraitAudioMount');
-  const audioStep = document.getElementById('audioStep');
-  document.querySelectorAll('[data-portrait-song-mode]').forEach(button => {
-    button.addEventListener('click', () => {
-      selectedPortraitSongMode = button.dataset.portraitSongMode;
-      document.querySelectorAll('[data-portrait-song-mode]').forEach(option => {
-        const selected = option === button;
-        option.classList.toggle('is-selected', selected);
-        option.setAttribute('aria-pressed', String(selected));
-      });
-      const audioSelected = selectedPortraitSongMode === 'audio';
-      portraitSongLinkField.hidden = audioSelected;
-      portraitAudioMount.hidden = !audioSelected;
-      if (audioSelected) animatePreviewEntry(portraitAudioMount);
-      audioInput.required = audioSelected;
-      if (audioSelected) {
-        portraitSongLink.value = '';
-        portraitAudioMount.append(audioStep);
-        audioStep.hidden = false;
-        audioStep.classList.add('is-visible');
-        audioStep.querySelector('.step-number').hidden = true;
-        audioStep.querySelector('.step-label span:last-child').textContent = 'Archivo de audio de tu canción';
-      } else {
-        audioStep.hidden = true;
-        if (selectedAudioFile || audioPreviewUrl) removeAudioBtn.click();
-      }
-    });
   });
 
   document.getElementById('portraitDedication').addEventListener('input', event => {
@@ -1196,13 +1190,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function getPortraitValidationError() {
     if (portraitPhotoFiles.filter(Boolean).length === 0) return 'Agrega al menos una fotografía para continuar.';
     const dedication = document.getElementById('portraitDedication').value.trim();
-    if (!dedication) return 'Escribe la dedicatoria para continuar.';
+    if (product.portraitType !== 'box-musical' && !dedication) return 'Escribe la dedicatoria para continuar.';
     const cardMessage = document.getElementById('portraitCardMessage').value.trim();
     if (!cardMessage) return 'Escribe un mensaje para tu tarjeta impresa.';
     if (cardMessage.length > 80) return 'El mensaje de la tarjeta impresa no puede superar los 80 caracteres.';
 
-    if (product.portraitType === 'box-musical' || product.portraitType === 'box-aniversario') {
-      if (!document.getElementById('portraitSongInput').value.trim()) return 'Escribe el nombre o enlace de la canción.';
+    if (product.portraitType === 'box-musical' || product.portraitType === 'box-aniversario' || product.portraitType === 'amore-mio') {
+      if (!document.getElementById('portraitSongInput').value.trim()) return 'Escribe el nombre o pega el enlace de la canción.';
     }
     if (product.portraitType === 'box-aniversario') {
       const firstName = document.getElementById('portraitNameOne').value.trim();
@@ -1220,22 +1214,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Escribe una fecha válida en formato Día / Mes / Año.';
       }
       if (dedication.length > 80) return 'La dedicatoria grabada no puede superar los 80 caracteres.';
-    }
-    if (product.portraitType === 'amore-mio') {
-      if (selectedPortraitSongMode === 'link') {
-        const linkValue = portraitSongLink.value.trim();
-        if (!linkValue) return 'Pega el enlace de la canción.';
-        try {
-          const link = new URL(linkValue);
-          if (!['http:', 'https:'].includes(link.protocol)) throw new Error('URL inválida');
-        } catch (error) {
-          return 'Escribe un enlace válido que comience con http:// o https://.';
-        }
-      } else if (selectedPortraitSongMode === 'audio') {
-        if (!selectedAudioFile) return 'Sube el archivo de audio de la canción.';
-      } else {
-        return 'Elige si compartirás el enlace o subirás un audio.';
-      }
     }
     return '';
   }
@@ -1407,15 +1385,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (product.isPortrait) {
         const portraitType = product.portraitType;
-        const dedicationType = portraitType === 'box-aniversario' ? 'grabada' : 'impresa';
         const portrait = {
           type: portraitType,
           photos: references.photos,
-          dedication: { type: dedicationType, text: document.getElementById('portraitDedication').value.trim() },
           card: { message: document.getElementById('portraitCardMessage').value.trim() },
           includedBenefit: product.includedBenefit
         };
-        if (portraitType === 'box-musical' || portraitType === 'box-aniversario') {
+        if (portraitType !== 'box-musical') {
+          portrait.dedication = {
+            type: portraitType === 'box-aniversario' ? 'grabada' : 'impresa',
+            text: document.getElementById('portraitDedication').value.trim()
+          };
+        }
+        if (portraitType === 'box-musical' || portraitType === 'box-aniversario' || portraitType === 'amore-mio') {
           portrait.song = { mode: 'name-or-link', value: document.getElementById('portraitSongInput').value.trim() };
         }
         if (portraitType === 'box-aniversario') {
@@ -1427,11 +1409,6 @@ document.addEventListener('DOMContentLoaded', () => {
             second: document.getElementById('portraitNameTwo').value.trim()
           };
           portrait.anniversaryDate = `${day}/${month}/${year}`;
-        }
-        if (portraitType === 'amore-mio') {
-          portrait.song = selectedPortraitSongMode === 'link'
-            ? { mode: 'link', value: portraitSongLink.value.trim() }
-            : { mode: 'audio', reference: references.audio };
         }
         customization.portrait = portrait;
       }

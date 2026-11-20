@@ -29,7 +29,6 @@ No se encontraron archivos de licencia, atribuciones, autorizaciones de imagen n
 
 | Recurso o archivo | Problema | Riesgo | Acción recomendada | Estado |
 |---|---|---:|---|---|
-| `js/blog.js` | El primer artículo referenciaba IDs de categorías, pero el componente busca IDs de productos y no mostraba recomendaciones. | Medio | Se reemplazaron por tres IDs reales del catálogo y se abrió cada artículo en navegador. | Corregido; ambos artículos mostraron tres productos con rutas válidas. |
 | `js/cart.js`, `js/main.js`, `personalizar.html` | Controles dinámicos del carrito y cantidades necesitaban nombres/estado accesible; Escape y retorno de foco no estaban implementados. | Medio | Se añadieron etiquetas ARIA, tipos de botón, estado expandido, cierre con Escape y retorno del foco. | Corregido y probado: abrir, cerrar con Escape, estado ARIA y foco correctos. |
 | `css/styles.css` | El texto secundario del pie tenía contraste aproximado de 3,24:1, inferior al mínimo WCAG AA de 4,5:1 para texto normal. | Medio | Se ajustó el token de color; contraste medido después: 5,68:1. | Corregido. |
 | `index.html`, `personalizar.html`, `js/personalizar.js`, `js/cart.js` | Mayúsculas inconsistentes y uso mezclado de “link/enlace”; la página de personalización no tenía descripción meta. | Bajo | Se normalizaron textos y se añadió la descripción meta de personalización. | Corregido; diagnósticos del editor sin errores. |
