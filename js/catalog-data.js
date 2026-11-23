@@ -65,7 +65,8 @@ window.PORTALOVERS_CATALOG = Object.freeze([
       'assets/images/LUNAS/LUNAS ECO/Lunaeco2.jpg',
       'assets/images/LUNAS/LUNAS ECO/Lunaeco3.jpg',
       'assets/images/LUNAS/LUNAS ECO/Lunaeco4.jpg',
-      'assets/images/LUNAS/LUNAS ECO/Lunaeco5.jpg'
+      'assets/images/LUNAS/LUNAS ECO/Lunaeco5.jpg',
+      'assets/images/LUNAS/LUNAS ECO/final.jpeg'
     ])
   }),
   Object.freeze({
@@ -79,7 +80,8 @@ window.PORTALOVERS_CATALOG = Object.freeze([
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE2.JPG',
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE4.JPG',
       'assets/images/LUNAS/LUNAS LOVE/LUNALOVE5.JPG',
-      'assets/images/LUNAS/LUNAS LOVE/LUNALOVE6.JPG'
+      'assets/images/LUNAS/LUNAS LOVE/LUNALOVE6.JPG',
+      'assets/images/LUNAS/LUNAS LOVE/final.jpeg'
     ])
   }),
   Object.freeze({
@@ -94,7 +96,8 @@ window.PORTALOVERS_CATALOG = Object.freeze([
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM3.jpg',
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM4.jpg',
       'assets/images/LUNAS/LUNAS MASCOTAS/LunaM5.jpg',
-      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM6.jpeg'
+      'assets/images/LUNAS/LUNAS MASCOTAS/LunaM6.jpeg',
+      'assets/images/LUNAS/LUNAS MASCOTAS/final.jpeg'
     ])
   }),
   Object.freeze({
