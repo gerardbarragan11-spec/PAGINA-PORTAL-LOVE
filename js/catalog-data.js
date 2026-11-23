@@ -153,7 +153,7 @@ window.PORTALOVERS_CATALOG = Object.freeze([
     category: 'portarretratos',
     categoryName: 'Portarretratos',
     title: 'Amore Mio',
-    price: 79900,
+    price: 59900,
     photoLimit: 4,
     photoCountLabel: 'Hasta 4 fotos',
     portraitType: 'amore-mio',
